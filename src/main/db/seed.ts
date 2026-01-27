@@ -20,25 +20,25 @@ export async function seedGames() {
       title: 'Hades ',
       genre: 'Roguelike',
       stores: ['Steam'],
-      pricePaid: 24.99,
+      gameStoreId: 12345,
     },
     {
       title: 'Cyberpunk 2077',
       genre: 'RPG',
       stores: ['Steam', 'GOG'],
-      pricePaid: 59.99,
+      gameStoreId: 12346,
     },
     {
       title: 'The Witcher 3: The Wild Hunt',
       genre: 'RPG',
       stores: ['GOG'],
-      pricePaid: 59.99,
+      gameStoreId: 12347,
     },
     {
       title: 'The Witcher 3 - The Wild Hunt',
       genre: 'RPG',
       stores: ['Steam'],
-      pricePaid: 59.99,
+      gameStoreId: 12348,
     },
   ];
 
@@ -56,16 +56,18 @@ export async function seedGames() {
         stores: JSON.stringify(game.stores.sort()),
         duplicate: (game.stores.length < 2) ? 0 : 1,
       });
-      console.log(`>>>> Seeded ${game.title} into database`);
+      console.log(`>>>> Added ${game.title} into database`);
     } else {
-
+      
       const oldStores = JSON.parse(exists[0].stores) as string[];
       const newStores = Array.from(new Set([...oldStores, ...game.stores]));
-
+      
       await db.update(gameLibrary).set({
         stores: JSON.stringify(newStores.sort()),
         duplicate: 1, // mark as duplicate
       }).where(eq(gameLibrary.id, exists[0].id));
+
+      console.log(`>>>> Updated ${game.title} `);
     }
   }
 }

@@ -6,6 +6,6 @@ export const gameLibrary = sqliteTable('game_library', {
   normalizedTitle: text('normalized_title').notNull(),
   genre: text('genre'),
   stores: text('stores'),
-  pricePaid: real('price_paid'),
+  gameStoreId: real('game_store_id'),
   duplicate: integer('duplicate'),
 });

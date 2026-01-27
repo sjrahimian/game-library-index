@@ -1,7 +1,6 @@
 import Database from 'better-sqlite3';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
 import path from 'path';
-import { gameLibrary } from './schema';
 
 // SQLite DB location
 // const dbPath = path.join(app.getPath('userData'), 'library.db');
@@ -20,7 +19,7 @@ CREATE TABLE IF NOT EXISTS game_library (
   normalized_title TEXT NOT NULL,
   genre TEXT,
   stores TEXT,
-  price_paid REAL,
+  game_store_id REAL,
   duplicate INTEGER
 );
 `);
