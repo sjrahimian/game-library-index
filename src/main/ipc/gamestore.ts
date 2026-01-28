@@ -1,5 +1,8 @@
 import { ipcMain } from 'electron';
-import { performGogLoginAndFetch } from '../sync/gog';
+
+// Local libraries
+import { performGogLoginAndFetch, processGogDataForDatabase } from '../sync/gog';
+import { addOrUpdateGame } from "../db/action";
 
 export function syncGogLibraryAndDB() {
   ipcMain.handle('sync:gog', async () => {
@@ -7,10 +10,15 @@ export function syncGogLibraryAndDB() {
     // throw new Error("FAILED TO SYNC");   // Test the error message
   
     const rawData = await performGogLoginAndFetch();
-    // Run with your rawData
-    // checkDuplicates(rawData);
-    // Insert into database
+    // Run with and iInsert into database
+    const processedGames = processGogDataForDatabase(rawData);
 
+    // You can now loop through this and call your database function
+    processedGames.forEach(async (game) => {
+      if (game.isGame) {
+        await addOrUpdateGame(game, 'GOG');
+      }
+    });
     
   });
 }

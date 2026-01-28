@@ -113,9 +113,6 @@ function fetchPageDataScrape(window: BrowserWindow, page: number): Promise<any> 
   });
 }
 
-
-
-
 // Safer alternative that avoids executeJavaScript entirely
 function fetchPageData(window: BrowserWindow, page: number): Promise<any> {
   return new Promise((resolve, reject) => {
@@ -143,7 +140,7 @@ function fetchPageData(window: BrowserWindow, page: number): Promise<any> {
   });
 }
 
-
+// Checks the raw data for duplicate entries based on IDs and Slugs
 export function checkDuplicates(games: any[]) {
   // Use a Set to store unique IDs we've already seen
   const seenIds = new Set();
@@ -186,12 +183,39 @@ export function checkDuplicates(games: any[]) {
   console.log(`--- Check Complete. Processed ${games.length} entries. ---`);
 }
 
+/**
+ * Transforms raw GOG API data into a format ready for database insertion.
+ * @param {Array} rawData - The array of objects from the GOG API.
+ * @returns {Array} - An array of processed objects for the database.
+ */
+export function processGogDataForDatabase(rawData) {
+  return rawData.map(item => {
+    // 1. Extract only the requested fields
+    const { 
+      id, 
+      title, 
+      worksOn, 
+      category, 
+      isGame, 
+      slug, 
+      releaseDate 
+    } = item;
 
-
-
-
-
-export function parseGogData(data: any) {
-  console.info("Parsing GOG data...");
-
+    // 2. Return a new object structured for your database tables
+    return {
+      // Used as storeSpecificId in store_entries table
+      id: String(id), 
+      // Used for display_title and normalized_title in games table
+      title: title,
+      slug: slug,
+      category: category,
+      // Boolean to help you filter out non-game media during sync
+      isGame: isGame,
+      // Store the OS object (will be stringified in the DB function)
+      worksOn: worksOn,
+      // Extract the date string from the GOG object
+      releaseDate: releaseDate?.date || null
+    };
+  });
 }
+

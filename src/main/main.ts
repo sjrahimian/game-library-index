@@ -16,11 +16,8 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
 // Local libraries
-import { db } from './db/client';
-import { gameLibrary } from './db/schema';
-import { seedGames } from './db/seed';
-import { syncGogLibraryAndDB, syncSteamLibraryAndDB } from './ipc/handles';
-import { isNull } from 'drizzle-orm';
+import { getGames } from './ipc/database';
+import { syncGogLibraryAndDB, syncSteamLibraryAndDB } from './ipc/gamestore';
 
 
 class AppUpdater {
@@ -133,9 +130,6 @@ app.on('window-all-closed', () => {
 });
 
 app.whenReady().then(async () => {
-    // await seedGames();
-    syncGogLibraryAndDB();
-
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
@@ -148,17 +142,8 @@ app.whenReady().then(async () => {
   
 // ************************************ \\
 // IPC handlers account sync to game store
-// gogLoginIPC();
+syncGogLibraryAndDB();
 
-// ************************ \\
-// IPC handlers using Drizzle
+// ************************* \\
 // IPC handler to get all games
-ipcMain.handle('get-games', async () => {
-  const rows = await db.select().from(gameLibrary).all();
-
-  return rows.map(r => ({
-    ...r,
-    stores: JSON.parse(r.stores),      // JSON stored in SQLite
-    duplicate: Boolean(r.duplicate),   // convert 0/1 to boolean
-  }));
-});
+getGames();
