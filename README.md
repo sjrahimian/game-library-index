@@ -2,10 +2,7 @@
 
 ## Introduction
 
-[![Build Status][github-actions-status]][github-actions-url]
-[![Github Tag][github-tag-image]][github-tag-url]
-
-Know if you have any duplicate game on GoG and Steam.
+Know if you have any duplicate games by syncing your GoG and Steam libraries.
 
 ## Setting Up for Development
 
