@@ -24,11 +24,20 @@
   color: white;
 }
 
+/* Ensure badges don't wrap strangely in the AG Grid cell */
+.store-badge-container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 4px;
+}
+
 .store-steam {
   background-color: #1b2838;
+  /* background-color: #171a21; */
 }
 
 .store-gog {
   background-color: #86328a;
+  /* background-color: #622d7a; */
 }
-

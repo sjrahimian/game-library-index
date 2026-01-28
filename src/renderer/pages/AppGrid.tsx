@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 // Local libraries
 // import GameLibraryTable from '../components/GameLibraryTable';
-import GameLibraryTable from '../components/GameLibraryTan';
+import GameLibraryTable from '../components/GameLibraryGrid';
 
 import GOGImportModal from '../components/GOGImportModal';
 
