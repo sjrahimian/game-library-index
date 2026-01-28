@@ -4,7 +4,7 @@
 
 Know if you have any duplicate games by syncing your GoG and Steam libraries.
 
-## Setting Up for Development
+## Development Setup
 
 After cloning the repository, or downloading via ZIP.
 
