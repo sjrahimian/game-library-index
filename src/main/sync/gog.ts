@@ -190,6 +190,7 @@ export function processGogDataForDatabase(rawData) {
       releaseDate 
     } = item;
 
+    const dateOnly = releaseDate?.date.split(' ')[0] || null;
     // Return a new object structured for your database tables
     return {
       id: String(id), 
@@ -198,7 +199,7 @@ export function processGogDataForDatabase(rawData) {
       category: category,
       isGame: isGame,
       worksOn: worksOn,
-      releaseDate: releaseDate?.date || null
+      releaseDate: dateOnly
     };
   });
 }
