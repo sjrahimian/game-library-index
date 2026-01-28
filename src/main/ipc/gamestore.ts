@@ -4,6 +4,8 @@ import { ipcMain } from 'electron';
 import { performGogLoginAndFetch, processGogDataForDatabase } from '../sync/gog';
 import { addOrUpdateGame } from "../db/action";
 
+// Main call that initiates the login fetch to GoG,
+// trimming excess data, and adding / updating the database.
 export function syncGogLibraryAndDB() {
   ipcMain.handle('sync:gog', async () => {
     console.log('Starting GOG library sync...');
@@ -23,8 +25,7 @@ export function syncGogLibraryAndDB() {
   });
 }
 
-
-
+// Main call that initiates the login fetch to Steam
 export function syncSteamLibraryAndDB() {
   ipcMain.handle('import:gog', async () => {
     console.log('Starting Steam library sync...');

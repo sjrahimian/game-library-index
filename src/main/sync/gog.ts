@@ -13,14 +13,14 @@ export async function performGogLoginAndFetch() {
   });
 
   try {
-    // 1. Wait for the user to Log In
+
     await handleLogin(authWindow);
     console.log("Login confirmed. Starting data fetch...");
 
-    // 2. Fetch Data Loop
-    let page = 1; // GOG pages usually start at 1
-    let maxPage = 1; // Will be updated after first fetch
-    let totalProducts = -1; // Will be updated after first fetch
+    // Start of fetch data
+    let page = 1;
+    let maxPage = 1;
+    let totalProducts = -1;
     let allProducts: any[] = [];
 
     while (page <= maxPage) {
@@ -152,7 +152,7 @@ export function checkDuplicates(games: any[]) {
     const { id, title, slug } = game;
     let isDuplicate = false;
 
-    // 1. Check if ID already exists
+    // Already exists
     if (seenIds.has(id)) {
       console.warn(`[DUPLICATE ID] Found repeated ID ${id} for: "${title}"`);
       isDuplicate = true;
@@ -160,23 +160,12 @@ export function checkDuplicates(games: any[]) {
       seenIds.add(id);
     }
 
-    // 2. Check if Slug already exists (useful for cross-store checks)
+    // Check if slug already exists (useful for cross-store checks)
     if (seenSlugs.has(slug)) {
       console.warn(`[DUPLICATE SLUG] Found repeated Slug "${slug}" for: "${title}"`);
       isDuplicate = true;
     } else {
       seenSlugs.add(slug);
-    }
-
-    // 3. Optional: Logic for "A Plague Tale" check as requested before
-    const isPlagueTale = slug === "a_plague_tale_innocence";
-
-    if (!isDuplicate) {
-      console.log(`Processing unique game: ${title} (ID: ${id})`);
-    }
-    
-    if (isPlagueTale) {
-      console.log(">> Field match: a_plague_tale_innocence found.");
     }
   }
 
@@ -190,7 +179,7 @@ export function checkDuplicates(games: any[]) {
  */
 export function processGogDataForDatabase(rawData) {
   return rawData.map(item => {
-    // 1. Extract only the requested fields
+    // Extract only the requested fields
     const { 
       id, 
       title, 
@@ -201,19 +190,14 @@ export function processGogDataForDatabase(rawData) {
       releaseDate 
     } = item;
 
-    // 2. Return a new object structured for your database tables
+    // Return a new object structured for your database tables
     return {
-      // Used as storeSpecificId in store_entries table
       id: String(id), 
-      // Used for display_title and normalized_title in games table
       title: title,
       slug: slug,
       category: category,
-      // Boolean to help you filter out non-game media during sync
       isGame: isGame,
-      // Store the OS object (will be stringified in the DB function)
       worksOn: worksOn,
-      // Extract the date string from the GOG object
       releaseDate: releaseDate?.date || null
     };
   });
