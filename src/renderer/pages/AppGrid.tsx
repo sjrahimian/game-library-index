@@ -12,7 +12,7 @@ export default function App() {
   return (
     <>
       <header className="toolbar">
-        <button onClick={() => setShowImport(true)}>Import from GOG</button>
+        <button onClick={() => setShowImport(true)}>Sync GOG Library</button>
       </header>
 
       <GameLibraryTable />

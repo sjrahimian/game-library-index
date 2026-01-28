@@ -133,7 +133,7 @@ app.on('window-all-closed', () => {
 });
 
 app.whenReady().then(async () => {
-    await seedGames();
+    // await seedGames();
     syncGogLibraryAndDB();
 
     createWindow();
@@ -145,6 +145,7 @@ app.whenReady().then(async () => {
   })
   .catch(console.log);
 
+  
 // ************************************ \\
 // IPC handlers account sync to game store
 // gogLoginIPC();

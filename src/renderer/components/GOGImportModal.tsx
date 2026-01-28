@@ -12,7 +12,7 @@ export default function GOGImportModal({ onClose }: Props) {
   const [error, setError] = useState<boolean>(false);
 
   const runAction = async (
-    action: 'login' | 'import',
+    action: 'sync' | 'other',
     fn: () => Promise<string>,
   ) => {
     setLoading(action);
@@ -21,6 +21,7 @@ export default function GOGImportModal({ onClose }: Props) {
 
     try {
       const result = await fn();
+      console.log(result)
       setStatus(result || `${action} completed successfully`);
     } catch (err: any) {
       setStatus(err?.message || `Failed to ${action}`);
@@ -33,23 +34,14 @@ export default function GOGImportModal({ onClose }: Props) {
   return (
     <div className="modal-backdrop">
       <div className="modal">
-        <h2>Import from GOG</h2>
+        <h2>Sync GOG Library</h2>
 
         <div className="modal-actions">
           <button
             disabled={!!loading}
-            onClick={() => runAction('login', () => window.api.loginGog())}
+            onClick={() => runAction('sync', () => window.api.syncGog())}
           >
-            Login to GOG
-          </button>
-
-          <button
-            disabled={!!loading}
-            onClick={() =>
-              runAction('import', () => window.api.importGog())
-            }
-          >
-            Import Library
+            Start Sync
           </button>
 
           <button disabled={!!loading} onClick={onClose}>
@@ -61,8 +53,8 @@ export default function GOGImportModal({ onClose }: Props) {
           <div className="loading">
             <div className="spinner" />
             <span>
-              {loading === 'login'
-                ? 'Waiting for GOG login…'
+              {loading === 'sync'
+                ? 'Waiting for GOG sync'
                 : 'Importing games…'}
             </span>
           </div>

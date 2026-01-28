@@ -27,8 +27,7 @@ const electronHandler = {
 
 contextBridge.exposeInMainWorld('api', {
   getGames: () => ipcRenderer.invoke('get-games'),
-  importGog: (cookie: string) => ipcRenderer.invoke('import:gog', cookie),
-  loginGog: (cookie: string) => ipcRenderer.invoke('login:gog'),
+  syncGog: (cookie: string) => ipcRenderer.invoke('sync:gog', cookie),
 });
 
 contextBridge.exposeInMainWorld('electron', electronHandler);
