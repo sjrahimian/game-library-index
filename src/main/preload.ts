@@ -28,6 +28,8 @@ const electronHandler = {
 contextBridge.exposeInMainWorld('api', {
   getGames: () => ipcRenderer.invoke('get-games'),
   syncGog: (cookie: string) => ipcRenderer.invoke('sync:gog', cookie),
+  syncSteam: (cookie: string) => ipcRenderer.invoke('sync:steam', cookie),
+  syncSteamUnofficial: (cookie: string) => ipcRenderer.invoke('sync:steamNoApi', cookie),
 });
 
 contextBridge.exposeInMainWorld('electron', electronHandler);
