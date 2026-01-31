@@ -38,7 +38,7 @@ export default function SteamSyncModal({ onClose }: Props) {
         ? await window.api.syncSteam(apiKey, steamId) 
         : await window.api.syncSteamUnofficial(steamId);
       
-      setStatus(`Success! Added ${result.newCount} new games and updated ${result.updatedCount}.`);
+      setStatus(`Success! Added ${result.count} new games.`);
     } catch (err: any) {
       setStatus(err?.message || `Failed to ${type} sync`);
       setError(true);

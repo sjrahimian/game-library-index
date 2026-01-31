@@ -15,9 +15,9 @@ export function normalizeTitle(title: string) {
     .replace(/\s+/g, '-')
 }
 
-export async function addOrUpdateGame(gameData: any, storeName: string) {
+export async function addGameToDatabase(gameData: any, storeName: string) {
   const normalized = normalizeTitle(gameData.title);
-  let statusNew = false, statusUpdated = false;
+  let statusNew = false;
 
   try {
     // 1. Check if the game already exists in the main 'games' table
@@ -53,17 +53,7 @@ export async function addOrUpdateGame(gameData: any, storeName: string) {
       )
       .get();
 
-    if (existingEntry) {
-      // Update existing store entry (e.g., if store ID changed or OS support updated)
-      await db.update(store_entries)
-        .set({
-          storeSpecificId: String(gameData.id),
-          osSupported: JSON.stringify(gameData.worksOn),
-        })
-        .where(eq(store_entries.id, existingEntry.id));
-      // console.log(`Updated ${storeName} entry for: ${gameData.title}`);
-      statusUpdated = true;
-    } else {
+    if (!existingEntry) {
       // Create a brand new store entry
       await db.insert(store_entries).values({
         gameId: gameRecord.id,
@@ -74,7 +64,7 @@ export async function addOrUpdateGame(gameData: any, storeName: string) {
       console.log(`Added new ${storeName} entry for: ${gameData.title}`);
     }
 
-    return { success: true, gameId: gameRecord.id, isNew: statusNew, isUpdated: statusUpdated };
+    return { success: true, gameId: gameRecord.id, isNew: statusNew };
   } catch (error) {
     console.error("Database sync error:", error);
     return { success: false, error };

@@ -2,7 +2,7 @@ import { ipcMain } from 'electron';
 
 // Local libraries
 import { performGogLoginAndFetch, processGogDataForDatabase } from '../sync/gog';
-import { addOrUpdateGame } from "../db/action";
+import { addGameToDatabase } from "../db/action";
 import { fetchSteamLibrary, fetchSteamLibraryUnofficial, prepSteamGamesForDatabase } from '../sync/steam';
 
 // Main call that initiates the login fetch to GoG,
@@ -17,24 +17,23 @@ export function syncGogLibraryAndDB() {
     console.debug("Number of games post-processing: ", preppedGames.length);
     
     // Track the number added or updated to the database
-    let addCount: number = 0, upsertCount: number = 0;
+    let addCount: number = 0;
     for (const game of preppedGames) {
       if (game.isGame) {
         // Now the code actually waits here!
-        const result = await addOrUpdateGame(game, 'GOG');
+        const result = await addGameToDatabase(game, 'GOG');
         
         if (result.success) {
             if (result.isNew) addCount++;
-            if (result.isUpdated) upsertCount++;
         }
 
       }
     }
     
-    console.info(`...GOG library sync completed. Added: ${addCount}, Updated: ${upsertCount}`);
+    console.info(`...GOG library sync completed. Added: ${addCount}`);
     
     event.sender.send('sync-complete');
-    return {newCount: addCount, updatedCount: upsertCount};
+    return {count: addCount};
   });
 }
 
@@ -54,24 +53,22 @@ export function syncSteamLibraryAndDB() {
     console.debug("Number of prepped games: ", preppedGames.length);
 
     // Track the number added or updated to the database
-    let addCount = 0, upsertCount = 0;
+    let addCount = 0;
     for (const game of preppedGames) {
-      console.debug("GAME>>>>>>>>>", game.isGame);
       if (game.isGame) {
-          const result = await addOrUpdateGame(game, 'Steam');
+          const result = await addGameToDatabase(game, 'Steam');
 
           if (result.success) {
             if (result.isNew) addCount++;
-            if (result.isUpdated) upsertCount++;
         }
 
       }
     }
 
-    console.info(`...Steam library sync completed. Added: ${addCount}, Updated: ${upsertCount}`);
+    console.info(`...Steam library sync completed. Added: ${addCount}`);
 
     event.sender.send('sync-complete');
-    return {newCount: addCount, updatedCount: upsertCount};
+    return {count: addCount};
     
   });
 }

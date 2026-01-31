@@ -86,21 +86,7 @@ export function prepSteamGamesForDatabase(rawData: any[]) {
       releaseDate: null // Steam basic list doesn't provide
     };
   });
-
-    // for (const steamGame of steamGames) {
-    //   const processedGame = {
-    //     id: String(steamGame.appid), // Steam's AppID
-    //     title: steamGame.name,       //
-    //     slug: steamGame.name.toLowerCase().replace(/ /g, '_'), // Generate basic slug
-    //     category: "Steam Genre Hydrate",      // Steam API doesn't provide genre in the basic list
-    //     isGame: true,
-    //     worksOn: { Windows: true, Mac: false, Linux: false }, // Basic assumption for Steam
-    //     releaseDate: null            // Steam basic list doesn't provide release date
-    //   };
-  
-    // }
 }
-
 
 export async function fetchSteamGameDetails(appId: string) {
   return new Promise((resolve, reject) => {

@@ -23,7 +23,7 @@ export default function GOGImportModal({ onClose }: Props) {
     try {
       const result = await fn();
       console.log(result)
-      setStatus(`Success! Added ${result.newCount} new games and updated ${result.updatedCount}.`);
+      setStatus(`Success! Added ${result.count} new games.`);
     } catch (err: any) {
       setStatus(err?.message || `Failed to ${action}`);
       setError(true);
