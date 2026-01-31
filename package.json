@@ -1,8 +1,8 @@
 {
   "name": "game-library-organizer",
   "productName": "game-library-organizer",
-  "version": "1.0.0",
-  "description": "A foundation for scalable desktop apps",
+  "version": "0.2.0",
+  "description": "Know if you have any duplicate games by syncing your GoG and Steam libraries.",
   "keywords": [
     "electron",
     "boilerplate",

@@ -27,9 +27,18 @@ const electronHandler = {
 
 contextBridge.exposeInMainWorld('api', {
   getGames: () => ipcRenderer.invoke('get-games'),
-  syncGog: (cookie: string) => ipcRenderer.invoke('sync:gog', cookie),
-  syncSteam: (cookie: string) => ipcRenderer.invoke('sync:steam', cookie),
-  syncSteamUnofficial: (cookie: string) => ipcRenderer.invoke('sync:steamNoApi', cookie),
+  getLibraryStats: () => ipcRenderer.invoke('get-stats'),
+  syncGog: () => ipcRenderer.invoke('sync:gog'),
+  syncSteam: (apiKey: string, steamId: string) => ipcRenderer.invoke('sync:steam', apiKey, steamId),
+  syncSteamUnofficial: (steamId: string) => ipcRenderer.invoke('sync:steamNoApi', steamId),
+  onSyncComplete: (callback) => {
+    // When 'sync-complete' arrives, run the callback provided by the frontend
+    const subscription = (_event, ...args) => callback(...args);
+    ipcRenderer.on('sync-complete', subscription);
+
+    // Return an unsubscribe function to prevent memory leaks
+    return () => ipcRenderer.removeListener('sync-complete', subscription);
+  },
 });
 
 contextBridge.exposeInMainWorld('electron', electronHandler);

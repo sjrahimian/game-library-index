@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron';
-import { eq } from 'drizzle-orm';
+import { count, eq, sql } from 'drizzle-orm';
 
 // Local libraries
 import { db } from '../db/client';
@@ -67,4 +67,44 @@ export function getGames() {
     }
 
     });
+}
+
+export function setupStatsHandlers() {
+  ipcMain.handle('get-stats', async () => {
+    try {
+      // 1. Total GOG Games
+      const gogRes = await db
+        .select({ value: count() })
+        .from(store_entries)
+        .where(eq(store_entries.storeName, 'GOG'));
+
+      // 2. Total Steam Games
+      const steamRes = await db
+        .select({ value: count() })
+        .from(store_entries)
+        .where(eq(store_entries.storeName, 'Steam'));
+
+      // 3. Duplicate Games
+      // We find games that have more than one entry in the store_entries table
+      const duplicateQuery = db
+        .select({ gameId: store_entries.gameId })
+        .from(store_entries)
+        .groupBy(store_entries.gameId)
+        .having(sql`count(${store_entries.gameId}) > 1`)
+        .as('duplicates');
+
+      const dupeRes = await db
+        .select({ value: count() })
+        .from(duplicateQuery);
+
+      return {
+        gog: gogRes[0]?.value || 0,
+        steam: steamRes[0]?.value || 0,
+        duplicates: dupeRes[0]?.value || 0
+      };
+    } catch (error) {
+      console.error("Failed to fetch library stats:", error);
+      return { gog: 0, steam: 0, duplicates: 0 };
+    }
+  });
 }
