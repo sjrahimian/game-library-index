@@ -28,7 +28,6 @@ export async function performGogLoginAndFetch() {
       
       // Fetch the specific page and wait for the result
       const data = await fetchPageData(authWindow, page);
-
       
       // Update maxPage from the API response
       if (data.totalPages && maxPage < Number(data.totalPages)) {
@@ -177,7 +176,7 @@ export function checkDuplicates(games: any[]) {
  * @param {Array} rawData - The array of objects from the GOG API.
  * @returns {Array} - An array of processed objects for the database.
  */
-export function processGogDataForDatabase(rawData) {
+export function processGogDataForDatabase(rawData: any[]) {
   return rawData.map(item => {
     // Extract only the requested fields
     const { 
