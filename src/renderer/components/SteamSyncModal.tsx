@@ -14,9 +14,7 @@ export default function SteamSyncModal({ onClose }: Props) {
   const [apiKey, setApiKey] = useState('');
   const [steamId, setSteamId] = useState('');
 
-  const runAction = async (
-    type: 'official' | 'unofficial',
-  ) => {
+  const runAction = async (type: 'official' | 'unofficial') => {
     setStatus(null);
     setError(false);
 
@@ -40,7 +38,7 @@ export default function SteamSyncModal({ onClose }: Props) {
         ? await window.api.syncSteam(apiKey, steamId) 
         : await window.api.syncSteamUnofficial(steamId);
       
-      setStatus(result || `${type} sync completed successfully`);
+      setStatus(`Success! Added ${result.newCount} new games and updated ${result.updatedCount}.`);
     } catch (err: any) {
       setStatus(err?.message || `Failed to ${type} sync`);
       setError(true);
@@ -89,7 +87,7 @@ export default function SteamSyncModal({ onClose }: Props) {
 
           {/* Unofficial Sync Button */}
           <button
-            disabled={!!loading}
+            disabled
             onClick={() => runAction('unofficial')}
             className="btn-secondary"
           >

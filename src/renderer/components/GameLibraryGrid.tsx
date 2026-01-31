@@ -12,10 +12,14 @@ export default function GameLibraryTable() {
   const [quickFilter, setQuickFilter] = useState('');
 
   useEffect(() => {
-    // Fetch from your updated IPC handler
-    window.api.getGames().then((data) => {
-      setGames(data);
+    window.api.getGames().then((data) => { setGames(data); });
+
+    // Listen for a 'sync-complete' event from main to auto-refresh
+    const unsubscribe = window.api.onSyncComplete(() => {
+      window.api.getGames().then(setGames);
     });
+
+    return () => unsubscribe();
   }, []);
 
   const columnDefs: ColDef[] = useMemo(

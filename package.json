@@ -1,7 +1,7 @@
 {
   "name": "game-library-organizer",
   "productName": "game-library-organizer",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Know if you have any duplicate games by syncing your GoG and Steam libraries.",
   "keywords": [
     "electron",
