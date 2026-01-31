@@ -16,7 +16,6 @@ export default function App() {
   
   const refreshStats = async () => {
     const data = await window.api.getLibraryStats();
-    console.log(">>>>>>>>>>>> LIBRARY STAT", data);
     setStats(data);
   };
 
