@@ -75,38 +75,62 @@ export async function addGameToDatabase(gameData: any, storeName: string) {
 
 export async function updateGame(gameData: any, storeName: string) {
   try {
+    
+    // Check if this specific game already exists
     const normalized = normalizeTitle(gameData.title);
+    let status = false;
+
+    // Check if this specific game entry already exists for this game
     let gameRecord = await db.select()
       .from(games)
       .where(eq(games.normalizedTitle, normalized))
       .get();
 
-    if (!gameRecord){
-      // console.error("Game not in database error:", gameData, gameRecord);
+    // Check if this specific store entry already exists for this game
+    let existingEntry = await db.select()
+      .from(store_entries)
+      .where(
+        and(
+          eq(store_entries.gameId, gameRecord.id),
+          eq(store_entries.storeName, storeName)
+        )
+      )
+      .get();
+      
+    if (!gameRecord && !existingEntry){
+      console.error(`Game "${gameData.title}" not in database! Should add instead of updating.`);
+      return addGameToDatabase(gameData, storeName);
+      // throw new Error("Game not in database! Should add instead of updating.");
     }
 
-        // 3. Handle the store-specific entry
-      // Check if this specific store entry already exists for this game
-      const existingEntry = await db.select()
-        .from(store_entries)
-        .where(
-          and(
-            eq(store_entries.gameId, gameRecord.id),
-            eq(store_entries.storeName, storeName)
-          )
-        )
-        .get();
+    // Update existing game table
+    if (gameRecord){
+      await db.update(games)
+      .set({
+        title: gameData.title,
+        normalizedTitle: normalized,
+        slug: gameData.slug,
+        category: gameData.category,
+        releaseDate: gameData.releaseDate?.date || gameData.releaseDate,
+      })
+      .where(eq(games.id, gameRecord.id));
+      status = true;
+    }
+    
+    // Update existing store entry table
+    if (existingEntry) {
+      await db.update(store_entries)
+      .set({
+        storeSpecificId: String(gameData.id),
+        osSupported: JSON.stringify(gameData.worksOn),
+      })
+      .where(eq(store_entries.id, existingEntry.id));
+      status = true;
+    }
 
-      if (!existingEntry) {
-        // Update existing store entry (e.g., if store ID changed or OS support updated)
-        await db.update(store_entries)
-          .set({
-            storeSpecificId: String(gameData.id),
-            osSupported: JSON.stringify(gameData.worksOn),
-          })
-          .where(eq(store_entries.id, existingEntry.id));
-        // console.log(`Updated ${storeName} entry for: ${gameData.title}`);
-      }
+    console.debug(`Updated tables for: ${gameData.title}`);
+    return { success: true, gameId: gameRecord.id, isUpdated: status };
+
   } catch (error) {
     console.error("Database sync error:", error);
     return { success: false, error };
