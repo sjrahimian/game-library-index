@@ -41,3 +41,7 @@
   background-color: #86328a;
   /* background-color: #622d7a; */
 }
+
+.os-conflict-warning {
+  filter: drop-shadow(0 0 2px rgba(255, 204, 0, 0.5));
+}
