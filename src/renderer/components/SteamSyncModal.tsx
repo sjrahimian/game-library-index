@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import '../assets/css/modal-gog.css';
+
+// Local
+import '../assets/css/modal.css';
+import steam from '../assets/icons/steam-logo.svg';
 
 type Props = {
   onClose: () => void;
@@ -50,29 +53,32 @@ export default function SteamSyncModal({ onClose }: Props) {
   return (
     <div className="modal-backdrop">
       <div className="modal">
-        <h2>Sync Steam Library</h2>
+        <h2>
+          <img width="35" alt="steam icon" src={steam} />
+          Sync Steam Library
+        </h2>
 
         {/* New Input Fields */}
-        <div className="input-group" style={{ marginBottom: '15px' }}>
-          <label style={{ display: 'block', marginBottom: '5px' }}>Steam ID (Required)</label>
+        <div className="input-group">
           <input 
             type="text" 
+            id="steamId"
             value={steamId} 
             onChange={(e) => setSteamId(e.target.value)}
-            placeholder="Enter SteamID64"
-            style={{ width: '100%', padding: '8px' }}
+            placeholder=" "
           />
+          <label htmlFor="steamId">Steam User ID (Required)</label>
         </div>
 
-        <div className="input-group" style={{ marginBottom: '20px' }}>
-          <label style={{ display: 'block', marginBottom: '5px' }}>API Key (Official Only)</label>
+        <div className="input-group">
           <input 
             type="text" 
+            id="apiKey"
             value={apiKey} 
             onChange={(e) => setApiKey(e.target.value)}
-            placeholder="Enter Steam Web API Key"
-            style={{ width: '100%', padding: '8px' }}
+            placeholder=" " 
           />
+          <label htmlFor="apiKey">API Key (Official Only)</label>
         </div>
 
         <div className="modal-actions">

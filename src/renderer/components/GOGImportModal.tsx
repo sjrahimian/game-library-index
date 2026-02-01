@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 
-import '../assets/css/modal-gog.css';
+// Local
+import '../assets/css/modal.css';
+import gogLight from '../assets/icons/gog-light.svg';
 
 type Props = {
   onClose: () => void;
@@ -35,7 +37,10 @@ export default function GOGImportModal({ onClose }: Props) {
   return (
     <div className="modal-backdrop">
       <div className="modal">
-        <h2>Sync GOG Library</h2>
+        <h2>
+          <img width="35" alt="gog icon" src={gogLight} />
+          Sync GOG Library
+        </h2>
 
         <div className="modal-actions">
           <button

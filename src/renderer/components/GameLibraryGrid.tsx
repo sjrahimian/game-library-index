@@ -5,6 +5,8 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import '../assets/css/game-table.css';
 
+import dup from '../assets/icons/duplicate.svg';
+
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default function GameLibraryTable() {
@@ -32,8 +34,9 @@ export default function GameLibraryTable() {
         // Optional: Add a small indicator for duplicates in the title cell
         cellRenderer: (params: any) => (
           <span>
+            {params.data.duplicate ? '♊ ' : ''}
             {params.value}
-            {params.data.duplicate ? ' 📄' : ''}
+            {params.data.duplicate ? ' ✨' : ''}
           </span>
         )
       },
@@ -56,8 +59,8 @@ export default function GameLibraryTable() {
         ),
       },
       {
-        field: 'releaseDate',
         headerName: 'Release Date',
+        field: 'releaseDate',
         sortable: true,
       },
       {

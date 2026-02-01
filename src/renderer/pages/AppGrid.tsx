@@ -7,6 +7,10 @@ import GOGImportModal from '../components/GOGImportModal';
 import SteamSyncModal from '../components/SteamSyncModal';
 import "../assets/css/App.css"
 
+import gogLight from '../assets/icons/gog-light.svg';
+import gogDark from '../assets/icons/gog-light.svg';
+import steam from '../assets/icons/steam-logo.svg';
+
 
 
 export default function App() {
@@ -30,17 +34,25 @@ export default function App() {
       <header className="toolbar">
         <div className="button-group">
           <button className="btn-gog" onClick={() => setShowImport(true)}>
-            GOG Library
+            <img width="30" alt="gog icon" src={gogLight} />
+            Sync GOG Library
           </button>
           <button className="btn-steam" onClick={() => setShowSteamImport(true)}>
-            Steam Library
+            <img width="30" alt="steam icon" src={steam} />
+            Sync Steam Library
           </button>
         </div>
 
         <div className="stats-container">
-          <span className="stat-badge stat-gog">GOG: {stats.gog}</span>
-          <span className="stat-badge stat-steam">Steam: {stats.steam}</span>
-          <span className="stat-badge stat-dupe">Duplicates: {stats.duplicates}</span>
+          <span className="stat-badge stat-gog">
+            <img width="20" alt="gog icon" src={gogLight} />
+            {stats.gog}
+          </span>
+          <span className="stat-badge stat-steam">
+            <img width="20" alt="steam icon" src={steam} />
+            {stats.steam}
+          </span>
+          <span className="stat-badge stat-dupe">Duplicates ♊ {stats.duplicates}</span>
         </div>
       </header>
       

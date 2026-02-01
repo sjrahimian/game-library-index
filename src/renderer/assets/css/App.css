@@ -5,7 +5,8 @@
     align-items: center;
     padding: 10px 20px;
     margin-bottom: 10px;
-    background: #7f7f7f;
+    background: #d2d2d2;
+    border-radius: 20px;
   }
   
   .button-group {
@@ -20,6 +21,12 @@
     border: none;
     padding: 8px 16px;
     border-radius: 4px;
+
+    /* ADD THESE FOR ALIGNMENT */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
   }
   
   .btn-gog {
@@ -28,6 +35,12 @@
     border: none;
     padding: 8px 16px;
     border-radius: 4px;
+
+    /* ADD THESE FOR ALIGNMENT */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
   }
   
   /* Counter Badges on the Far Right */
@@ -41,6 +54,12 @@
     border-radius: 20px;
     font-size: 0.85rem;
     font-weight: bold;
+
+    /* ADD THESE FOR ALIGNMENT */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
   }
   
   .stat-steam { background-color: #1b2838; color: white; }
