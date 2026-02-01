@@ -51,7 +51,7 @@ export default function GOGImportModal({ onClose }: Props) {
           </button>
 
           <button disabled={!!loading} onClick={onClose}>
-            Cancel
+            Close
           </button>
         </div>
 

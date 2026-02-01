@@ -101,7 +101,7 @@ export default function SteamSyncModal({ onClose }: Props) {
           </button>
 
           <button disabled={!!loading} onClick={onClose}>
-            Cancel
+            Close
           </button>
         </div>
 
