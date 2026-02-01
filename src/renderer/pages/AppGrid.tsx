@@ -16,10 +16,10 @@ import steam from '../assets/icons/steam-logo.svg';
 export default function App() {
   const [showImport, setShowImport] = useState(false);
   const [showSteamImport, setShowSteamImport] = useState(false);
-  const [stats, setStats] = useState({ steam: 0, gog: 0, duplicates: 0 });
-  const [games, setGames] = useState({ steam: 0, gog: 0, duplicates: 0 });
+  const [stats, setStats] = useState({ steam: 0, gog: 0, total: 0, duplicates: 0 });
   const [isHydrating, setIsHydrating] = useState(false);
   
+  // Refresh stats whenever a sync completes
   const refreshStats = async () => {
     const data = await window.api.getLibraryStats();
     setStats(data);
@@ -27,32 +27,21 @@ export default function App() {
 
   useEffect(() => {
     refreshStats();
-    // Refresh stats whenever a sync completes
     return window.api.onSyncComplete(refreshStats);
   }, []);
 
+  // Show that data is being populated in the background.
   useEffect(() => {
     const handleStart = () => setIsHydrating(true);
     const handleFinished = () => setIsHydrating(false);
-    const handleUpdate = (event, data) => {
-      console.log(`Update game in table: ${data.gameId}`)
-      // setGames(prev => prev.map(game => {
-      //   if (game.id === data.gameId) {
-      //     return { ...game, osSupported: data.os };
-      //   }
-      //   return game;
-      // }));
-    };
   
     window.api.onHydrationStarted(handleStart);
     window.api.onHydrationFinished(handleFinished);
-    window.api.onGameHydrated(handleUpdate);
   
     return () => {
       // Clean up listeners
       window.api.removeHydrationStartedListener(handleStart);
       window.api.removeHydrationFinishedListener(handleFinished);
-      window.api.removeGameHydratedListener(handleUpdate);
     };
   }, []);
 
@@ -70,15 +59,16 @@ export default function App() {
           </button>
         </div>
 
-          {isHydrating && (
-            <div className="stats-container">
-            <span className="stat-badge stat-hydrate">
-              <div className="stat-badge" style={{ background: '#004225' }}>
-                Enriching Data <span className="hydrating-dot"></span>
-              </div>
-            </span>
+        {isHydrating && (
+          <div className="stats-container">
+          <span className="stat-badge stat-hydrate">
+            <div className="stat-badge" style={{ background: '#004225' }}>
+              Enriching Data <span className="hydrating-dot"></span>
             </div>
-          )}
+          </span>
+          </div>
+        )}
+
         <div className="stats-container">
           <span className="stat-badge stat-gog">
             <img width="20" alt="gog icon" src={gogLight} />
@@ -87,6 +77,9 @@ export default function App() {
           <span className="stat-badge stat-steam">
             <img width="20" alt="steam icon" src={steam} />
             {stats.steam}
+          </span>
+          <span className="stat-badge stat-total">
+            Total: {stats.total}
           </span>
           <span className="stat-badge stat-dupe">Duplicates ♊ {stats.duplicates}</span>
         </div>
