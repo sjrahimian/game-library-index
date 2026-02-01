@@ -4,6 +4,7 @@ import { ipcMain } from 'electron';
 import { performGogLoginAndFetch, processGogDataForDatabase } from '../sync/gog';
 import { addGameToDatabase } from "../db/action";
 import { fetchSteamLibrary, fetchSteamLibraryUnofficial, prepSteamGamesForDatabase } from '../sync/steam';
+import { hydrateSteamGames } from './database';
 
 // Main call that initiates the login fetch to GoG,
 // trimming excess data, and adding / updating the database.
@@ -64,6 +65,12 @@ export function syncSteamLibraryAndDB() {
 
       }
     }
+
+    // START HYDRATION IN BACKGROUND (No 'await' here)
+    hydrateSteamGames(event).then(() => {
+      // Optionally notify the frontend when EVERY game is fully enriched
+      event.sender.send('hydration-complete');
+    });
 
     console.info(`...Steam library sync completed. Added: ${addCount}`);
 

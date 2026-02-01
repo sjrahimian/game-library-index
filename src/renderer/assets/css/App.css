@@ -21,8 +21,6 @@
     border: none;
     padding: 8px 16px;
     border-radius: 4px;
-
-    /* ADD THESE FOR ALIGNMENT */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -35,8 +33,6 @@
     border: none;
     padding: 8px 16px;
     border-radius: 4px;
-
-    /* ADD THESE FOR ALIGNMENT */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -54,8 +50,6 @@
     border-radius: 20px;
     font-size: 0.85rem;
     font-weight: bold;
-
-    /* ADD THESE FOR ALIGNMENT */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -64,4 +58,23 @@
   
   .stat-steam { background-color: #1b2838; color: white; }
   .stat-gog { background-color: #86328a; color: white; }
-  .stat-dupe { background-color: #fcdcdc; color: #d32f2f; } /* Light red with dark text for readability */
+  .stat-dupe { background-color: #fcdcdc; color: #d32f2f; }
+  
+  /* For hydration */
+  .hydrating-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #a8e4a0;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 10px;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+  }
+
+  .stat-hydrate { color: #a8e4a0; }

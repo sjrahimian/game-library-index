@@ -35,10 +35,23 @@ contextBridge.exposeInMainWorld('api', {
     // When 'sync-complete' arrives, run the callback provided by the frontend
     const subscription = (_event, ...args) => callback(...args);
     ipcRenderer.on('sync-complete', subscription);
-
-    // Return an unsubscribe function to prevent memory leaks
+    // Cleanup
     return () => ipcRenderer.removeListener('sync-complete', subscription);
   },
+  
+  // --- NEW HYDRATION LISTENERS ---
+  // Start signal
+  onHydrationStarted: (callback) => ipcRenderer.on('hydration-started', () => callback()),
+  onHydrationFinished: (callback) => ipcRenderer.on('hydration-finished', () => callback()),
+
+  // Individual game update signal
+  onGameHydrated: (callback) => ipcRenderer.on('game-hydrated', (_event, data) => callback(data)),
+
+  // Cleanup methods (important for React performance)
+  removeHydrationStartedListener: (callback) => ipcRenderer.removeListener('hydration-started', callback),
+  removeHydrationFinishedListener: (callback) => ipcRenderer.removeListener('hydration-finished', callback),
+  removeGameHydratedListener: (callback) => ipcRenderer.removeListener('game-hydrated', callback),
+
 });
 
 contextBridge.exposeInMainWorld('electron', electronHandler);

@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron';
-import { count, eq, sql } from 'drizzle-orm';
+import { and, count, eq, sql } from 'drizzle-orm';
 
 // Local libraries
 import { db } from '../db/client';
@@ -108,3 +108,114 @@ export function setupStatsHandlers() {
     }
   });
 }
+
+/**
+ * Generates a random delay to mimic human behavior
+ * @param min Minimum milliseconds
+ * @param max Maximum milliseconds
+ * @param breakChance 0-1 chance of taking a longer 5-10 second break
+ */
+const humanDelay = async (min = 2000, max = 5000, breakChance = 0.05) => {
+  const isTakingBreak = Math.random() < breakChance;
+  
+  const delay = isTakingBreak 
+    ? Math.floor(Math.random() * (12000 - 7000) + 7000) // Long break: 7-12s
+    : Math.floor(Math.random() * (max - min) + min);   // Normal jitter: 2-5s
+
+  if (isTakingBreak) console.log("Taking a human-like break...");
+  return new Promise(resolve => setTimeout(resolve, delay));
+};
+
+/**
+ * Converts Steam's date strings to YYYY-MM-DD
+ * Examples: "Nov 14, 2011" -> "2011-11-14"
+ */
+function formatSteamDate(dateString: string): string | null {
+  if (!dateString || dateString.toLowerCase().includes('soon')) {
+    return null; 
+  }
+
+  const date = new Date(dateString);
+  
+  // Check if the date is valid
+  if (isNaN(date.getTime())) {
+    return null;
+  }
+
+  // Returns YYYY-MM-DD
+  return date.toISOString().split('T')[0];
+}
+
+export async function hydrateSteamGames(event) {
+  // 1. Find Steam games that are missing data (e.g., category or releaseDate)
+  const gamesToHydrate = await db
+    .select({
+      id: games.id,
+      appId: store_entries.storeSpecificId,
+    })
+    .from(games)
+    .innerJoin(store_entries, eq(games.id, store_entries.gameId))
+    .where(
+      and(
+        eq(store_entries.storeName, 'Steam'),
+        eq(games.category, "Steam Genre Hydrate")
+      )).all();
+
+  if (gamesToHydrate.length === 0) {
+    console.info("No Steam games to hydrate.");
+    return;
+  }
+  
+  console.log(`Starting background hydration for ${gamesToHydrate.length} games...`);
+  event.sender.send('hydration-started');
+  console.log(`Starting background hydration for ${gamesToHydrate.length} games...`);
+
+  for (const game of gamesToHydrate) {
+    try {
+      // 2. Wait 1.5 - 2 seconds between calls to avoid 429 (Rate Limit) errors
+      await humanDelay(2000, 4500, 0.08); 
+
+      const response = await fetch(`https://store.steampowered.com/api/appdetails?appids=${game.appId}`);
+      
+      // If we hit a 429 (Too Many Requests), stop immediately and wait much longer
+      if (response.status === 429) {
+        console.warn("Rate limit hit! Cooling down for 1 minute...");
+        await new Promise(res => setTimeout(res, 60000));
+        const response = await fetch(`https://store.steampowered.com/api/appdetails?appids=${game.appId}`);
+      }
+
+      const data = await response.json();
+
+      if (data[game.appId]?.success) {
+        const details = data[game.appId].data;
+
+        // Update the games table
+        //details.genres.map((g: any) => g.description).join(', ')
+        await db.update(games)
+          .set({
+            category:details.genres ? details.genres[0]?.description : 'Unknown',
+            releaseDate: formatSteamDate(details.release_date?.date || null),
+          }).where(eq(games.id, game.id));
+
+        // Update the Store Entries table
+        await db.update(store_entries)
+          .set({osSupported: JSON.stringify(details.platforms), })
+          .where(eq(store_entries.gameId, game.id));
+
+        // IMPORTANT: Tell the frontend this specific game is ready
+        event.sender.send('game-hydrated', { 
+          gameId: data.gameId, 
+          os: data.platforms 
+        });
+
+        console.log(`Hydrated: ${details.name}`);
+      }
+
+      event.sender.send('hydration-finished');
+
+    } catch (error) {
+      console.error(`Failed to hydrate appId ${game.appId}:`, error);
+    }
+  }
+}
+

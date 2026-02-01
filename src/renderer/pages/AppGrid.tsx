@@ -17,6 +17,8 @@ export default function App() {
   const [showImport, setShowImport] = useState(false);
   const [showSteamImport, setShowSteamImport] = useState(false);
   const [stats, setStats] = useState({ steam: 0, gog: 0, duplicates: 0 });
+  const [games, setGames] = useState({ steam: 0, gog: 0, duplicates: 0 });
+  const [isHydrating, setIsHydrating] = useState(false);
   
   const refreshStats = async () => {
     const data = await window.api.getLibraryStats();
@@ -27,6 +29,31 @@ export default function App() {
     refreshStats();
     // Refresh stats whenever a sync completes
     return window.api.onSyncComplete(refreshStats);
+  }, []);
+
+  useEffect(() => {
+    const handleStart = () => setIsHydrating(true);
+    const handleFinished = () => setIsHydrating(false);
+    const handleUpdate = (event, data) => {
+      console.log(`Update game in table: ${data.gameId}`)
+      // setGames(prev => prev.map(game => {
+      //   if (game.id === data.gameId) {
+      //     return { ...game, osSupported: data.os };
+      //   }
+      //   return game;
+      // }));
+    };
+  
+    window.api.onHydrationStarted(handleStart);
+    window.api.onHydrationFinished(handleFinished);
+    window.api.onGameHydrated(handleUpdate);
+  
+    return () => {
+      // Clean up listeners
+      window.api.removeHydrationStartedListener(handleStart);
+      window.api.removeHydrationFinishedListener(handleFinished);
+      window.api.removeGameHydratedListener(handleUpdate);
+    };
   }, []);
 
   return (
@@ -43,6 +70,15 @@ export default function App() {
           </button>
         </div>
 
+          {isHydrating && (
+            <div className="stats-container">
+            <span className="stat-badge stat-hydrate">
+              <div className="stat-badge" style={{ background: '#004225' }}>
+                Enriching Data <span className="hydrating-dot"></span>
+              </div>
+            </span>
+            </div>
+          )}
         <div className="stats-container">
           <span className="stat-badge stat-gog">
             <img width="20" alt="gog icon" src={gogLight} />

@@ -80,43 +80,10 @@ export function prepSteamGamesForDatabase(rawData: any[]) {
       id: String(appid), 
       title: name,
       slug: name.toLowerCase().replace(/ /g, '_'),
-      category: "Steam Genre Hydrate",  // Steam basic list doesn't provide
-      isGame: true, // Steam basic list doesn't provide
-      worksOn: { Windows: true, Mac: false, Linux: false }, // Basic assumption for Steam
-      releaseDate: null // Steam basic list doesn't provide
+      category: "Steam Hydrate",  // Steam basic list doesn't provide
+      isGame: true,
+      worksOn: { Windows: true, Mac: false, Linux: false }, // Steam basic list doesn't provide
+      releaseDate: "Steam Hydrate" // Steam basic list doesn't provide
     };
-  });
-}
-
-export async function fetchSteamGameDetails(appId: string) {
-  return new Promise((resolve, reject) => {
-    // This is the public Store API
-    const url = `https://store.steampowered.com/api/appdetails?appids=${appId}`;
-
-    const request = net.request(url);
-
-    request.on('response', (response) => {
-      let body = '';
-      response.on('data', (chunk) => { body += chunk; });
-      response.on('end', () => {
-        try {
-          const json = JSON.parse(body);
-          const data = json[appId];
-
-          if (data.success) {
-            // Steam genres are returned as an array: [{id: '1', description: 'Action'}, ...]
-            const genres = data.data.genres.map((g: any) => g.description).join(', ');
-            resolve(genres);
-          } else {
-            resolve("Unknown");
-          }
-        } catch (e) {
-          reject(e);
-        }
-      });
-    });
-
-    request.on('error', (err) => reject(err));
-    request.end();
   });
 }
