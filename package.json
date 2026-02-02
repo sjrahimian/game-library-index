@@ -1,8 +1,8 @@
 {
-  "name": "game-library-organizer",
-  "productName": "game-library-organizer",
-  "version": "0.4.4",
-  "description": "Know if you have any duplicate games by syncing your GoG and Steam libraries.",
+  "name": "Game Library Scout",
+  "productName": "game-library-scout",
+  "version": "0.4.5",
+  "description": "A unified game directory that scouts your Steam and GOG libraries to uncover basic game details, OS info, and duplicate ownership.",
   "keywords": [
     "electron",
     "boilerplate",
@@ -10,7 +10,14 @@
     "typescript",
     "ts",
     "sass",
-    "webpack"
+    "webpack",
+    "library",
+    "tracker",
+    "organizer",
+    "video game",
+    "game",
+    "gog",
+    "steam"
   ],
   "boilerplate": "https://github.com/electron-react-boilerplate/electron-react-boilerplate#readme",
   "homepage": "",

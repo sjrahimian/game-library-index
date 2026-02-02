@@ -1,8 +1,8 @@
-# Game Library Tracker
+# Game Library Scout
 
 ## Introduction
 
-Know if you have any duplicate games by syncing your GoG and Steam libraries.
+Game Library Scout is a basic, bare-bones directory for your digital collection. It synchronizes with your Steam and GOG libraries to identify cross-store duplicates, reveal platform compatibility, and provide a unified index of your basic gaming metadata.
 
 ## Development Setup
 
@@ -16,10 +16,8 @@ npm start
 
 ## References
 
-[Electron React Boilerplate README](./README-boilerplate.md)
-
 Special thanks to the folks behind [Electron React Boilerplate](https://github.com/electron-react-boilerplate) project.
 
 ## License
 
-MIT © Game Library Tracker
+MIT © Game Library Scout
