@@ -4,6 +4,7 @@ import { and, count, eq, sql } from 'drizzle-orm';
 // Local libraries
 import { db } from '../db/client';
 import { games, store_entries } from '../db/schema';
+import { normalizeOSData } from '../db/action';
 
 export function getGames() {
     ipcMain.handle('get-games', async () => {
@@ -100,6 +101,7 @@ export function setupStatsHandlers() {
       return {
         gog: gogRes[0]?.value || 0,
         steam: steamRes[0]?.value || 0,
+        total: (gogRes[0]?.value || 0) + (steamRes[0]?.value || 0),
         duplicates: dupeRes[0]?.value || 0
       };
     } catch (error) {
@@ -128,7 +130,7 @@ const humanDelay = async (min = 2000, max = 5000, breakChance = 0.05) => {
 
 /**
  * Converts Steam's date strings to YYYY-MM-DD
- * Examples: "Nov 14, 2011" -> "2011-11-14"
+ * Example: "Nov 14, 2011" -> "2011-11-14"
  */
 function formatSteamDate(dateString: string): string | null {
   if (!dateString || dateString.toLowerCase().includes('soon')) {
@@ -146,8 +148,8 @@ function formatSteamDate(dateString: string): string | null {
   return date.toISOString().split('T')[0];
 }
 
-export async function hydrateSteamGames(event) {
-  // 1. Find Steam games that are missing data (e.g., category or releaseDate)
+export async function hydrateSteamGames(event: Electron.IpcMainInvokeEvent) {
+  // Find Steam games that are missing data
   const gamesToHydrate = await db
     .select({
       id: games.id,
@@ -158,7 +160,7 @@ export async function hydrateSteamGames(event) {
     .where(
       and(
         eq(store_entries.storeName, 'Steam'),
-        eq(games.category, "Steam Genre Hydrate")
+        eq(games.category, "Steam Hydrate")
       )).all();
 
   if (gamesToHydrate.length === 0) {
@@ -166,10 +168,9 @@ export async function hydrateSteamGames(event) {
     return;
   }
   
-  console.log(`Starting background hydration for ${gamesToHydrate.length} games...`);
   event.sender.send('hydration-started');
-  console.log(`Starting background hydration for ${gamesToHydrate.length} games...`);
-
+  console.info(`Starting background hydration for ${gamesToHydrate.length} games...`);
+  
   for (const game of gamesToHydrate) {
     try {
       // 2. Wait 1.5 - 2 seconds between calls to avoid 429 (Rate Limit) errors
@@ -190,28 +191,31 @@ export async function hydrateSteamGames(event) {
         const details = data[game.appId].data;
 
         // Update the games table
-        //details.genres.map((g: any) => g.description).join(', ')
+        const genre = details.genres ? details.genres[0]?.description : 'Unknown';
+        const newDate = formatSteamDate(details.release_date?.date || null);
         await db.update(games)
           .set({
-            category:details.genres ? details.genres[0]?.description : 'Unknown',
-            releaseDate: formatSteamDate(details.release_date?.date || null),
+            category: genre,
+            releaseDate: newDate,
           }).where(eq(games.id, game.id));
 
-        // Update the Store Entries table
+        // Update the store_entries table
         await db.update(store_entries)
-          .set({osSupported: JSON.stringify(details.platforms), })
+          .set({ osSupported: normalizeOSData(details.platforms), })
           .where(eq(store_entries.gameId, game.id));
 
+          
         // IMPORTANT: Tell the frontend this specific game is ready
         event.sender.send('game-hydrated', { 
-          gameId: data.gameId, 
-          os: data.platforms 
+          gameId: game.id, 
+          appId: game.appId,
+          os: JSON.stringify(details.platforms),
+          category: genre,
+          releaseDate: newDate,
         });
 
         console.log(`Hydrated: ${details.name}`);
       }
-
-      event.sender.send('hydration-finished');
 
     } catch (error) {
       console.error(`Failed to hydrate appId ${game.appId}:`, error);

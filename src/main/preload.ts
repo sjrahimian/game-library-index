@@ -33,21 +33,19 @@ contextBridge.exposeInMainWorld('api', {
   syncSteamUnofficial: (steamId: string) => ipcRenderer.invoke('sync:steamNoApi', steamId),
   onSyncComplete: (callback) => {
     // When 'sync-complete' arrives, run the callback provided by the frontend
-    const subscription = (_event, ...args) => callback(...args);
+    const subscription = (_event: any, ...args: any[]) => callback(...args);
     ipcRenderer.on('sync-complete', subscription);
     // Cleanup
     return () => ipcRenderer.removeListener('sync-complete', subscription);
   },
   
-  // --- NEW HYDRATION LISTENERS ---
+  // --- HYDRATION LISTENERS ---
   // Start signal
   onHydrationStarted: (callback) => ipcRenderer.on('hydration-started', () => callback()),
   onHydrationFinished: (callback) => ipcRenderer.on('hydration-finished', () => callback()),
-
-  // Individual game update signal
   onGameHydrated: (callback) => ipcRenderer.on('game-hydrated', (_event, data) => callback(data)),
 
-  // Cleanup methods (important for React performance)
+  // Cleanup methods
   removeHydrationStartedListener: (callback) => ipcRenderer.removeListener('hydration-started', callback),
   removeHydrationFinishedListener: (callback) => ipcRenderer.removeListener('hydration-finished', callback),
   removeGameHydratedListener: (callback) => ipcRenderer.removeListener('game-hydrated', callback),

@@ -5,8 +5,16 @@ import { eq, and } from 'drizzle-orm';
 import { db } from './client';
 import { games, store_entries } from './schema';
 
-
-export function normalizeTitle(title: string) {
+/**
+ * Normalizes video game title to be a consistent format:
+ * @param {String} title - The raw string to undergo:
+ *  - lowercase conversion
+ *  - trimmed spaces
+ *  - removed accents, punctuations
+ *  - replaced spaces with dash
+ * @returns {String} - The clean string
+ */
+export function normalizeTitle(title: string): string {
   if (!title) return "";
   return title
     .toLowerCase()
@@ -15,6 +23,29 @@ export function normalizeTitle(title: string) {
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9\s]/g, '')
     .replace(/\s+/g, '-')
+}
+
+/**
+ * Normalize video game OS support data to a consistent format:
+ * @param {Record} rawOS - The raw object received from the API
+ * @returns {string} - A stringified JSON object in the format of
+ *   { windows: boolean, mac: boolean, linux: boolean }
+ */
+export function normalizeOSData(rawOS: Record<string, any> = {}): string {
+  // We use a case-insensitive check by lowercasing all keys first
+  const normalizedKeys = Object.keys(rawOS).reduce((acc, key) => {
+    acc[key.toLowerCase()] = rawOS[key];
+    return acc;
+  }, {} as Record<string, any>);
+
+  const cleanOS = {
+    windows: !!(normalizedKeys.windows || normalizedKeys.Windows),
+    mac: !!(normalizedKeys.mac || normalizedKeys.Mac),
+    linux: !!(normalizedKeys.linux || normalizedKeys.Linux),
+  };
+
+  return JSON.stringify(cleanOS);
+
 }
 
 export async function addGameToDatabase(gameData: any, storeName: string) {
@@ -61,12 +92,13 @@ export async function addGameToDatabase(gameData: any, storeName: string) {
         gameId: gameRecord.id,
         storeName: storeName,
         storeSpecificId: String(gameData.id),
-        osSupported: JSON.stringify(gameData.worksOn),
+        osSupported: normalizeOSData(gameData.worksOn),
       });
       console.log(`Added new ${storeName} entry for: ${gameData.title}`);
     }
     
     return { success: true, gameId: gameRecord.id, isNew: statusNew };
+    
   } catch (error) {
     console.error("Database sync error:", error);
     return { success: false, error };

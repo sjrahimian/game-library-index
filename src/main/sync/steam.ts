@@ -82,7 +82,7 @@ export function prepSteamGamesForDatabase(rawData: any[]) {
       slug: name.toLowerCase().replace(/ /g, '_'),
       category: "Steam Hydrate",  // Steam basic list doesn't provide
       isGame: true,
-      worksOn: { Windows: true, Mac: false, Linux: false }, // Steam basic list doesn't provide
+      worksOn: { windows: false, mac: false, linux: false }, // Steam basic list doesn't provide
       releaseDate: "Steam Hydrate" // Steam basic list doesn't provide
     };
   });

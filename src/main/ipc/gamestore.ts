@@ -6,8 +6,7 @@ import { addGameToDatabase } from "../db/action";
 import { fetchSteamLibrary, fetchSteamLibraryUnofficial, prepSteamGamesForDatabase } from '../sync/steam';
 import { hydrateSteamGames } from './database';
 
-// Main call that initiates the login fetch to GoG,
-// trimming excess data, and adding / updating the database.
+// Main call that initiates game list login fetch to GoG
 export function syncGogLibraryAndDB() {
   ipcMain.handle('sync:gog', async (event) => {
     console.log('Starting GOG library sync...');
@@ -17,11 +16,9 @@ export function syncGogLibraryAndDB() {
     const preppedGames = processGogDataForDatabase(rawData);
     console.debug("Number of games post-processing: ", preppedGames.length);
     
-    // Track the number added or updated to the database
     let addCount: number = 0;
     for (const game of preppedGames) {
       if (game.isGame) {
-        // Now the code actually waits here!
         const result = await addGameToDatabase(game, 'GOG');
         
         if (result.success) {
@@ -31,14 +28,14 @@ export function syncGogLibraryAndDB() {
       }
     }
     
+    event.sender.send('sync-complete');
     console.info(`...GOG library sync completed. Added: ${addCount}`);
     
-    event.sender.send('sync-complete');
     return {count: addCount};
   });
 }
 
-// Main call that initiates the login fetch to Steam
+// Main call that initiates game list fetch to Steam
 export function syncSteamLibraryAndDB() {
   ipcMain.handle('sync:steam', async (event, apiKey: string, steamId: string) => {
     if (!apiKey) {
@@ -53,28 +50,26 @@ export function syncSteamLibraryAndDB() {
     const preppedGames = prepSteamGamesForDatabase(rawData);
     console.debug("Number of prepped games: ", preppedGames.length);
 
-    // Track the number added or updated to the database
     let addCount = 0;
     for (const game of preppedGames) {
       if (game.isGame) {
-          const result = await addGameToDatabase(game, 'Steam');
+        const result = await addGameToDatabase(game, 'Steam');
 
-          if (result.success) {
-            if (result.isNew) addCount++;
+        if (result.success) {
+          if (result.isNew) addCount++;
         }
 
       }
     }
 
-    // START HYDRATION IN BACKGROUND (No 'await' here)
+    // Start hydration in background
     hydrateSteamGames(event).then(() => {
-      // Optionally notify the frontend when EVERY game is fully enriched
-      event.sender.send('hydration-complete');
+      event.sender.send('hydration-finished');
     });
 
+    event.sender.send('sync-complete');
     console.info(`...Steam library sync completed. Added: ${addCount}`);
 
-    event.sender.send('sync-complete');
     return {count: addCount};
     
   });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { ModuleRegistry, AllCommunityModule, ColDef } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -12,20 +12,61 @@ import dup from '../assets/icons/duplicate.svg';
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default function GameLibraryTable() {
-  const [games, setGames] = useState([]);
+  const [rowData, setRowData] = useState([]);
   const [quickFilter, setQuickFilter] = useState('');
+  const gridRef = useRef<AgGridReact>(null);
 
   useEffect(() => {
-    window.api.getGames().then((data) => { setGames(data); });
+    window.api.getGames().then((data) => { setRowData(data); });
 
     // Listen for a 'sync-complete' event from main to auto-refresh
     const unsubscribe = window.api.onSyncComplete(() => {
-      window.api.getGames().then(setGames);
+      window.api.getGames().then(setRowData);
     });
 
     return () => unsubscribe();
   }, []);
- 
+
+
+// Inside GameLibraryGrid.tsx
+useEffect(() => {
+  const handleUpdate = (data: any) => {
+    // 1. Update the React State first
+    setRowData(prevRows => {
+      return prevRows.map(row => {
+        if (row.id === data.gameId) {
+          // Safety check: Ensure stores exists before mapping
+          const currentStores = row.stores || [];
+          const updatedStores = currentStores.map((s: any) => 
+            s && s.name === 'Steam' ? { ...s, os: data.os } : s
+          );
+
+          return { 
+            ...row, 
+            stores: updatedStores,
+            category: data.category,
+            genre: data.genre,
+            releaseDate: data.releaseDate
+          };
+        }
+        return row;
+      });
+    });
+
+    const api = gridRef.current?.api;
+    if (api) {
+      const rowNode = api.getRowNode(data.gameId.toString());
+      if (rowNode) {
+        api.refreshCells({ rowNodes: [rowNode], force: true });
+      }
+    }
+  };
+
+  window.api.onGameHydrated(handleUpdate);
+  return () => window.api.removeGameHydratedListener(handleUpdate);
+}, []);
+
+  // For the OS support
   const OS_KEYS = ['Windows', 'Mac', 'Linux'] as const;
   const OS_LETTERS: Record<string, string> = {
     'Windows': 'W',
@@ -34,17 +75,24 @@ export default function GameLibraryTable() {
   };
   
   const OSCompatibilityRenderer = (params: any) => {
-    const stores = params.data.stores || [];
+    if (!params || !params.value) return null;
+    const stores = params.value || [];
     if (stores.length === 0) return null;
+    if (!Array.isArray(stores)) return null;
+
+
+    // Ensure s and s.os exist during the loop
   
     const renderOSLetter = (osType: typeof OS_KEYS[number]) => {
       const letter = OS_LETTERS[osType];
+      const lookupKey = osType.toLowerCase();
       
-      const supportList = stores.map((s: any) => ({
-        name: s.name,
-        supported: !!s.os?.[osType]
-      }));
-  
+      const supportList = stores.filter(s => s && s.name).map((s: any) => {
+        const supportOS = s.os ? (s.os[osType] === true || s.os[lookupKey] === true) : false;
+
+        return { name: s.name, supported: supportOS };
+      });
+
       const isSupportedAnywhere = supportList.some(s => s.supported);
       const isConsistent = supportList.every(s => s.supported === supportList[0].supported);
   
@@ -64,16 +112,16 @@ export default function GameLibraryTable() {
             fontWeight: 'bold',
             fontSize: '0.9rem',
             width: '20px', // Fixed width keeps letters aligned in columns
-            // Logic: Yellow for conflict, White for supported, Dimmed for unsupported
-            color: !isConsistent ? '#ffcc00' : isSupportedAnywhere ? '#444444' : '#e22727',
+            color: !isConsistent ? '#dcba1d' : isSupportedAnywhere ? '#256e35' : '#bb382c',
             cursor: 'help'
           }}
         >
           <span style={{
-              border: `1px solid ${!isConsistent ? '#ffcc00' : isSupportedAnywhere ? '#666' : '#333'}`,
+              transition: 'all 0.4s ease-in-out',
+              border: `1px solid ${!isConsistent ? '#8e781d' : isSupportedAnywhere ? '#d6eadf' : '#f5e2ea'}`,
               borderRadius: '3px',
               padding: '1px 4px',
-              backgroundColor: isSupportedAnywhere ? 'rgba(255,255,255,0.05)' : 'transparent'
+              backgroundColor: !isConsistent ? '#8e781d' : isSupportedAnywhere ? '#d6eadf' : '#f5e2ea'
             }}>
             {letter}
           </span>
@@ -85,8 +133,6 @@ export default function GameLibraryTable() {
               position: 'absolute', 
               top: '-2px', 
               right: '-2px',
-              background: '#ffcc00',
-              color: '#000',
               borderRadius: '50%',
               width: '8px',
               height: '8px',
@@ -124,7 +170,6 @@ export default function GameLibraryTable() {
           <span>
             {params.data.duplicate ? '♊ ' : ''}
             {params.value}
-            {params.data.duplicate ? ' ✨' : ''}
           </span>
         )
       },
@@ -172,6 +217,17 @@ export default function GameLibraryTable() {
         headerName: 'OS Support',
         field: 'stores',
         cellRenderer: OSCompatibilityRenderer,
+        valueFormatter: (params) => {
+          const os = params.value?.[0]?.os;
+          if (!os) return "";
+          
+          // Check both cases for each platform
+          const w = os.Windows || os.windows;
+          const m = os.Mac || os.mac;
+          const l = os.Linux || os.linux;
+          
+          return `${w ? 'W' : ''}${m ? 'M' : ''}${l ? 'L' : ''}`;
+        }
       },
     ],
     [],
@@ -200,9 +256,11 @@ export default function GameLibraryTable() {
 
       <div className="ag-theme-alpine" style={{ height: 'calc(100vh - 150px)', width: '100%' }}>
         <AgGridReact
-          rowData={games}
+          rowData={rowData}
           columnDefs={columnDefs}
+          ref={gridRef}
           defaultColDef={defaultColDef}
+          getRowId={(params) => params.data.id.toString()} // CRITICAL for refresh logic
           quickFilterText={quickFilter}
           // Applies your existing .duplicate-row class from CSS
           rowClassRules={{

@@ -14,5 +14,12 @@ export const store_entries = sqliteTable('store_entries', {
   gameId: integer('game_id').references(() => games.id), // Foreign Key
   storeName: text('store_name').notNull(), // "GOG", "Steam"
   storeSpecificId: text('store_specific_id').notNull(),
-  osSupported: text('os_supported'), // Specific to the store version
+  osSupported: text('os_supported').$type<Record<string, boolean>>().$onUpdateFn((val) => {
+    if (!val) return val;
+    // Automatically lowercase all keys whenever this column is updated
+    return Object.keys(val).reduce((acc, key) => {
+      acc[key.toLowerCase()] = val[key];
+      return acc;
+    }, {});
+  }),
 });
