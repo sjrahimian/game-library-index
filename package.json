@@ -1,8 +1,8 @@
 {
-  "name": "Game Library Scout",
-  "productName": "game-library-scout",
-  "version": "0.4.5",
+  "name": "game-library-scout",
+  "productName": "Game Library Scout",
   "description": "A unified game directory that scouts your Steam and GOG libraries to uncover basic game details, OS info, and duplicate ownership.",
+  "version": "0.4.5",
   "keywords": [
     "electron",
     "boilerplate",
