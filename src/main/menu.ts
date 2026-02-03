@@ -1,10 +1,12 @@
 import {
   app,
+  dialog,
   Menu,
   shell,
   BrowserWindow,
   MenuItemConstructorOptions,
 } from 'electron';
+import { version } from 'os';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -256,29 +258,28 @@ export default class MenuBuilder {
         label: 'Help',
         submenu: [
           {
-            label: 'Learn More',
-            click() {
-              shell.openExternal('https://electronjs.org');
+            label: 'About',
+            click: () => {
+              dialog.showMessageBox({
+                title: `About ${app.name}`,
+                message: `${app.getName()}, v${app.getVersion()}`,
+                detail: 'A unified directory for your GOG and Steam libraries.',
+                buttons: ['Close']
+              });
             },
           },
           {
-            label: 'Documentation',
+            label: 'GitHub Documentation',
             click() {
               shell.openExternal(
-                'https://github.com/electron/electron/tree/main/docs#readme',
+                'https://github.com/sjrahimian/game-library-scout/blob/master/README.md',
               );
             },
           },
           {
-            label: 'Community Discussions',
+            label: 'GitHub Issues',
             click() {
-              shell.openExternal('https://www.electronjs.org/community');
-            },
-          },
-          {
-            label: 'Search Issues',
-            click() {
-              shell.openExternal('https://github.com/electron/electron/issues');
+              shell.openExternal('https://github.com/sjrahimian/game-library-scout/issues');
             },
           },
         ],

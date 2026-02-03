@@ -4,12 +4,29 @@ import Database from 'better-sqlite3';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
 
 // SQLite DB location
-const dbPath = path.join(app.getPath('userData'), 'gamelib.db');
-// console.log(app.getPath('userData'))
+const getDatabasePath = (filename: string) => {
+  // Keeps database local in the project root
+  if (process.env.NODE_ENV === 'development') {
+    return path.join(__dirname, `../../../${filename}`);
+  }
 
-// Keep database local in the project root
-// const dbPath = path.join(__dirname, '../../gamelib.db'); 
+  // Check if the app is installed in Program Files
+  const exePath = app.getPath('exe');
+  const isProgramFiles = exePath.includes('Program Files');
 
+  if (isProgramFiles) {
+    // If it's via an installer, use the safe AppData folder
+    return path.join(app.getPath('userData'), filename);
+  } else {
+    // If it portable 
+    return path.join(path.dirname(exePath), filename);
+  }
+};
+
+const dbPath = getDatabasePath('gamelib.db');
+console.debug("Database path: ", dbPath);
+
+// Initialization
 const connection = new Database(dbPath);
 export const db = drizzle(connection);
 

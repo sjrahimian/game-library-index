@@ -2,7 +2,7 @@
   "name": "game-library-scout",
   "productName": "Game Library Scout",
   "description": "A unified game directory that scouts your Steam and GOG libraries to uncover basic game details, OS info, and duplicate ownership.",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "keywords": [
     "electron",
     "boilerplate",
@@ -190,8 +190,7 @@
     "webpack-merge": "^6.0.1"
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.erb.ElectronReact",
+    "appId": "org.erb.GameLibraryScout",
     "asar": true,
     "afterSign": ".erb/scripts/notarize.js",
     "asarUnpack": "**\\*.{node,dll}",
@@ -231,14 +230,37 @@
     },
     "win": {
       "target": [
-        "nsis"
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
       ]
     },
+    "nsis": {
+      "artifactName": "${name}_win_v${version}_setup-win.${ext}",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "license": "LICENSE"
+    },
+    "portable": {
+      "artifactName": "${name}_v${version}_portable-win.${ext}",
+      "requestExecutionLevel": "user"
+    },
     "linux": {
-      "target": [
-        "AppImage"
-      ],
-      "category": "Development"
+      "target": ["AppImage", "tar.gz"],
+      "category": "Utility",
+      "artifactName": "${name}_${version}_linux.${ext}",
+      "desktop": {
+        "entry": {
+          "GenericName": "Game Library Scout",
+          "Comment": "Find duplicates and cross-store details for your Steam and GOG games.",
+          "Terminal": "false"
+        }
+      }
     },
     "directories": {
       "app": "release/app",
