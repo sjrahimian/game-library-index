@@ -2,7 +2,7 @@
   "name": "game-library-scout",
   "productName": "Game Library Scout",
   "description": "A unified game directory that scouts your Steam and GOG libraries to uncover basic game details, OS info, and duplicate ownership.",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "keywords": [
     "electron",
     "boilerplate",
@@ -232,11 +232,15 @@
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         },
         {
           "target": "portable",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ]
     },
@@ -251,7 +255,10 @@
       "requestExecutionLevel": "user"
     },
     "linux": {
-      "target": ["AppImage", "tar.gz"],
+      "target": [
+        "AppImage",
+        "tar.gz"
+      ],
       "category": "Utility",
       "artifactName": "${name}_${version}_linux.${ext}",
       "desktop": {
