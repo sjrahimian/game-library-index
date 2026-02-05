@@ -18,7 +18,7 @@ export default function App() {
   const [showSteamImport, setShowSteamImport] = useState(false);
   const [stats, setStats] = useState({ steam: 0, gog: 0, total: 0, duplicates: 0 });
   const [isHydrating, setIsHydrating] = useState(false);
-  
+
   // Refresh stats whenever a sync completes
   const refreshStats = async () => {
     const data = await window.api.getLibraryStats();
@@ -70,18 +70,31 @@ export default function App() {
         )}
 
         <div className="stats-container">
-          <span className="stat-badge stat-gog">
-            <img width="20" alt="gog icon" src={gogLight} />
-            {stats.gog}
-          </span>
-          <span className="stat-badge stat-steam">
-            <img width="20" alt="steam icon" src={steam} />
-            {stats.steam}
-          </span>
-          <span className="stat-badge stat-total">
-            Total: {stats.total}
-          </span>
-          <span className="stat-badge stat-dupe">Duplicates ♊ {stats.duplicates}</span>
+          {stats.gog !== 0 && (
+            <span className="stat-badge stat-gog">
+              <img width="20" alt="gog icon" src={gogLight} />
+              {stats.gog}
+            </span>
+          )}
+          {stats.steam !== 0 && (
+            <span className="stat-badge stat-steam">
+              <img width="20" alt="steam icon" src={steam} />
+              {stats.steam}
+            </span>
+          )}
+          {stats.total !== 0 && stats.duplicates !== 0 && (
+            <span className="stat-badge stat-total">
+              Unique: {stats.total - stats.duplicates}
+            </span>
+          )}
+            <span className="stat-badge stat-total">
+              Owned: {stats.total}
+            </span>
+          {stats.duplicates !== 0 && (
+            <span className="stat-badge stat-dupe">
+              Duplicates ♊ {stats.duplicates}
+            </span>
+          )}
         </div>
       </header>
       

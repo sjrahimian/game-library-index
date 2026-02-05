@@ -45,7 +45,6 @@ useEffect(() => {
             ...row, 
             stores: updatedStores,
             category: data.category,
-            genre: data.genre,
             releaseDate: data.releaseDate
           };
         }

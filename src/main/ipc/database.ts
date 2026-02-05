@@ -173,7 +173,6 @@ export async function hydrateSteamGames(event: Electron.IpcMainInvokeEvent) {
   
   for (const game of gamesToHydrate) {
     try {
-      // 2. Wait 1.5 - 2 seconds between calls to avoid 429 (Rate Limit) errors
       await humanDelay(2000, 4500, 0.08); 
 
       const response = await fetch(`https://store.steampowered.com/api/appdetails?appids=${game.appId}`);
@@ -209,7 +208,7 @@ export async function hydrateSteamGames(event: Electron.IpcMainInvokeEvent) {
         event.sender.send('game-hydrated', { 
           gameId: game.id, 
           appId: game.appId,
-          os: JSON.stringify(details.platforms),
+          os: details.platforms,
           category: genre,
           releaseDate: newDate,
         });
