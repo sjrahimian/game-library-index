@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
 // Local libraries
-// import GameLibraryTable from '../components/GameLibraryTable';
 import GameLibraryTable from '../components/GameLibraryGrid';
 import GOGImportModal from '../components/GOGImportModal';
 import SteamSyncModal from '../components/SteamSyncModal';

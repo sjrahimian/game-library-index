@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 // Local
 import '../assets/css/modal.css';
 import gogLight from '../assets/icons/gog-light.svg';
+import gogDark from '../assets/icons/gog-light.svg';
 
 type Props = {
   onClose: () => void;

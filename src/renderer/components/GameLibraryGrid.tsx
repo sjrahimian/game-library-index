@@ -3,10 +3,9 @@ import { ModuleRegistry, AllCommunityModule, ColDef } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
+
+// Local libraries
 import '../assets/css/game-table.css';
-// import { FaWindows, FaApple, FaLinux } from 'react-icons/fa';
-
-
 import dup from '../assets/icons/duplicate.svg';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
