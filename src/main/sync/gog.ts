@@ -1,6 +1,21 @@
 import { net } from 'electron';
 import { BrowserWindow } from 'electron';
 
+export async function clearCookies() {
+  const authWindow = new BrowserWindow({
+    width: 600,
+    height: 800,
+    show: true,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true
+    }
+  });
+
+  await authWindow.webContents.session.clearStorageData();
+  authWindow.close()
+}
+
 export async function performGogLoginAndFetch() {
   const authWindow = new BrowserWindow({
     width: 600,
@@ -16,6 +31,8 @@ export async function performGogLoginAndFetch() {
 
     await handleLogin(authWindow);
     console.log("Login confirmed. Starting data fetch...");
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
 
     // Start of fetch data
     let page = 1;
@@ -55,9 +72,9 @@ export async function performGogLoginAndFetch() {
     return allProducts;
 
   } catch (error) {
+    if (authWindow) { authWindow.close(); };
     console.error("Process failed:", error);
-    authWindow.close();
-    throw error;
+    new Error(`${error}`);
   }
 }
 
@@ -69,7 +86,7 @@ function handleLogin(window: BrowserWindow): Promise<void> {
 
     const onNavigate = (event: any, url: string) => {
       // Check if we hit the success URL
-      if (url.includes('on_login_success')) {
+      if (url.includes('on_login_success') && url.startsWith('https://embed.gog.com/on_login_success')) {
         window.webContents.removeListener('did-navigate', onNavigate); // Cleanup listener
         resolve(); // Unblock the main function
       }
@@ -80,7 +97,7 @@ function handleLogin(window: BrowserWindow): Promise<void> {
     window.webContents.on('did-redirect-navigation', onNavigate); // Catch redirects too
 
     // Handle user closing window early
-    window.on('closed', () => reject('User closed login window'));
+    window.on('closed', () => reject(new Error('User closed login window')));
   });
 }
 
@@ -129,7 +146,8 @@ function fetchPageData(window: BrowserWindow, page: number): Promise<any> {
         try {
           resolve(JSON.parse(body));
         } catch (e) {
-          reject(e);
+          console.error("GOG API returned HTML instead of JSON. First 100 chars:", body.substring(0, 100));
+          reject(new Error("GOG returned HTML (likely a login or redirect page) instead of data."));
         }
       });
     });

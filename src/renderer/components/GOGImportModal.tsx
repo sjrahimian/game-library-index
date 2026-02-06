@@ -10,23 +10,24 @@ type Props = {
 };
 
 export default function GOGImportModal({ onClose }: Props) {
-  const [loading, setLoading] = useState<'login' | 'import' | null>(null);
+  const [loading, setLoading] = useState<'sync' | 'clear' | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<boolean>(false);
 
   const runAction = async (
-    action: 'sync' | 'other',
+    action: 'sync' | 'clear',
     fn: () => Promise<string>,
   ) => {
     setLoading(action);
     setStatus(null);
     setError(false);
 
-    
     try {
       const result = await fn();
       console.log(result)
-      setStatus(`Success! Added ${result.count} new games.`);
+      if (result) {
+        setStatus(`Success! Added ${result.count} new games.`);
+      }
     } catch (err: any) {
       setStatus(err?.message || `Failed to ${action}`);
       setError(true);
@@ -44,11 +45,15 @@ export default function GOGImportModal({ onClose }: Props) {
         </h2>
 
         <div className="modal-actions">
-          <button
-            disabled={!!loading}
+          <button disabled={!!loading}
             onClick={() => runAction('sync', () => window.api.syncGog())}
           >
             Start Sync
+          </button>
+
+          <button disabled={!!loading} 
+            onClick={() => runAction('clear', () => window.api.clearGog())}>
+            Clear Cookies
           </button>
 
           <button disabled={!!loading} onClick={onClose}>

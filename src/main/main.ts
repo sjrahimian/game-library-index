@@ -17,7 +17,7 @@ import { resolveHtmlPath } from './util';
 
 // Local libraries
 import { getGames, setupStatsHandlers } from './ipc/database';
-import { syncGogLibraryAndDB, syncSteamLibraryAndDB, syncSteamLibraryAndDBUnofficial } from './ipc/gamestore';
+import { clearGogCookies, syncGogLibraryAndDB, syncSteamLibraryAndDB, syncSteamLibraryAndDBUnofficial } from './ipc/gamestore';
 
 
 class AppUpdater {
@@ -136,6 +136,7 @@ app.whenReady().then(async () => {
   
 // ************************************ \\
 // IPC handlers account sync to game store
+clearGogCookies();
 syncGogLibraryAndDB();
 syncSteamLibraryAndDB();
 syncSteamLibraryAndDBUnofficial();

@@ -1,12 +1,17 @@
 import { ipcMain } from 'electron';
 
 // Local libraries
-import { performGogLoginAndFetch, processGogDataForDatabase } from '../sync/gog';
+import { clearCookies, performGogLoginAndFetch, processGogDataForDatabase } from '../sync/gog';
 import { addGameToDatabase } from "../db/action";
 import { fetchSteamLibrary, fetchSteamLibraryUnofficial, prepSteamGamesForDatabase } from '../sync/steam';
 import { hydrateSteamGames } from './database';
 
 // Main call that initiates game list login fetch to GoG
+export function clearGogCookies() {
+  ipcMain.handle('clear:gog', async (event) => {
+    await clearCookies();
+  });
+}
 export function syncGogLibraryAndDB() {
   ipcMain.handle('sync:gog', async (event) => {
     console.log('Starting GOG library sync...');
