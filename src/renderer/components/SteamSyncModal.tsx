@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Local
+import { useHydration } from '../hooks/HydrationContext';
+
 import '../assets/css/modal.css';
 import steam from '../assets/icons/steam-logo.svg';
 
@@ -12,6 +14,7 @@ export default function SteamSyncModal({ onClose }: Props) {
   const [loading, setLoading] = useState<'sync' | 'unofficial' | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<boolean>(false);
+  const { isHydrating } = useHydration();
 
   // New state for inputs
   const [apiKey, setApiKey] = useState('');
@@ -84,7 +87,7 @@ export default function SteamSyncModal({ onClose }: Props) {
         <div className="modal-actions">
           {/* Official Sync Button */}
           <button
-            disabled={!!loading}
+            disabled={!!loading || !!isHydrating}
             onClick={() => runAction('official')}
             className="btn-primary"
           >
@@ -109,6 +112,13 @@ export default function SteamSyncModal({ onClose }: Props) {
           <div className="loading">
             <div className="spinner" />
             <span>Syncing games…</span>
+          </div>
+        )}
+
+        {isHydrating && (
+          <div className="loading">
+            <div className="spinner" />
+            <span>Enriching data...</span>
           </div>
         )}
 

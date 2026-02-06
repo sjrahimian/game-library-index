@@ -1,8 +1,8 @@
-# Game Library Scout
+# Game Library Index
 
 ## Introduction
 
-Game Library Scout is a basic, bare-bones directory for your digital collection. It synchronizes with your Steam and GOG libraries to identify cross-store duplicates, reveal platform compatibility, and provide a unified index of your basic gaming metadata.
+Game Library Index is a basic, bare-bones directory for your digital collection. It synchronizes with your Steam and GOG libraries to identify cross-store duplicates, reveal platform compatibility, and provide a unified index of your basic gaming metadata.
 
 ## Getting Started
 
@@ -14,7 +14,7 @@ You will need to login into your GOG account (uses the unofficial APIs) to grab 
 
 You will need to register for a [Steam Web API Key](https://steamcommunity.com/dev/apikey), after which you can pull your games library.
 
-_Nb._ Game Library Scout **will not** save your API key; the key will have to be provided each time a sync with the Steam library is attempted.
+_Nb._ Game Library Index **will not** save your API key; the key will have to be provided each time a sync with the Steam library is attempted.
 
 ## Setup
 
@@ -38,8 +38,8 @@ Right-click the .AppImage file > Select Properties > Permissions tab:
 Open terminal and run:
 
 ```bash
-chmod +x game-library-scout_linux_v*_portable.AppImage
-./game-library-scout_linux_portable_0.4.6_x64.AppImage
+chmod +x game-library-index_linux_v*_portable.AppImage
+./game-library-index_linux_portable_0.4.6_x64.AppImage
 ```
 
 ## Development Setup
@@ -63,6 +63,6 @@ Special thanks to the folks behind [Electron React Boilerplate](https://github.c
 
 ## License
 
-[GPL-3.0](./LICENSE) © Game Library Scout
+[GPL-3.0](./LICENSE) © Game Library Index
 
 [MIT](./LICENSE-boilerplate) © Electron React Boilerplate

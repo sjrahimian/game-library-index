@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import GameLibraryTable from '../components/GameLibraryGrid';
 import GOGImportModal from '../components/GOGImportModal';
 import SteamSyncModal from '../components/SteamSyncModal';
+import { useHydration } from '../hooks/HydrationContext';
 import "../assets/css/App.css"
 
 import gogLight from '../assets/icons/gog-light.svg';
@@ -16,7 +17,7 @@ export default function App() {
   const [showImport, setShowImport] = useState(false);
   const [showSteamImport, setShowSteamImport] = useState(false);
   const [stats, setStats] = useState({ steam: 0, gog: 0, total: 0, duplicates: 0 });
-  const [isHydrating, setIsHydrating] = useState(false);
+  const { isHydrating } = useHydration();
 
   // Refresh stats whenever a sync completes
   const refreshStats = async () => {
@@ -29,32 +30,17 @@ export default function App() {
     return window.api.onSyncComplete(refreshStats);
   }, []);
 
-  // Show that data is being populated in the background.
-  useEffect(() => {
-    const handleStart = () => setIsHydrating(true);
-    const handleFinished = () => setIsHydrating(false);
-  
-    window.api.onHydrationStarted(handleStart);
-    window.api.onHydrationFinished(handleFinished);
-  
-    return () => {
-      // Clean up listeners
-      window.api.removeHydrationStartedListener(handleStart);
-      window.api.removeHydrationFinishedListener(handleFinished);
-    };
-  }, []);
-
   return (
     <>
       <header className="toolbar">
         <div className="button-group">
           <button className="btn-gog" onClick={() => setShowImport(true)}>
             <img width="30" alt="gog icon" src={gogLight} />
-            Sync GOG Library
+            GOG Library
           </button>
           <button className="btn-steam" onClick={() => setShowSteamImport(true)}>
             <img width="30" alt="steam icon" src={steam} />
-            Sync Steam Library
+            Steam Library
           </button>
         </div>
 

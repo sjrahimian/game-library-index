@@ -272,14 +272,14 @@ export default class MenuBuilder {
             label: 'GitHub Documentation',
             click() {
               shell.openExternal(
-                'https://github.com/sjrahimian/game-library-scout/blob/master/README.md',
+                'https://github.com/sjrahimian/game-library-index/blob/master/README.md',
               );
             },
           },
           {
             label: 'GitHub Issues',
             click() {
-              shell.openExternal('https://github.com/sjrahimian/game-library-scout/issues');
+              shell.openExternal('https://github.com/sjrahimian/game-library-index/issues');
             },
           },
         ],

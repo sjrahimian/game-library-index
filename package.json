@@ -1,8 +1,8 @@
 {
-  "name": "game-library-scout",
-  "productName": "Game Library Scout",
-  "description": "A unified game directory that scouts your Steam and GOG libraries to uncover basic game details, OS info, and duplicate ownership.",
-  "version": "0.4.12",
+  "name": "game-library-index",
+  "productName": "Game Library Index",
+  "description": "A unified game directory that indexes your Steam and GOG libraries to uncover basic game details, OS info, and duplicate ownership.",
+  "version": "0.5.0",
   "keywords": [
     "electron",
     "boilerplate",
@@ -20,10 +20,10 @@
     "steam"
   ],
   "boilerplate": "https://github.com/electron-react-boilerplate/electron-react-boilerplate#readme",
-  "homepage": "https://github.com/sjrahimian/game-library-scout",
+  "homepage": "https://github.com/sjrahimian/game-library-index",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sjrahimian/game-library-scout"
+    "url": "https://github.com/sjrahimian/game-library-index"
   },
   "boilerplate-license": "MIT",
   "license": "GPL-3.0-only",
@@ -190,7 +190,7 @@
     "webpack-merge": "^6.0.1"
   },
   "build": {
-    "appId": "org.erb.GameLibraryScout",
+    "appId": "org.erb.GameLibraryIndex",
     "asar": true,
     "afterSign": ".erb/scripts/notarize.js",
     "asarUnpack": "**\\*.{node,dll}",
@@ -263,7 +263,7 @@
       "artifactName": "${name}_${version}_linux.${ext}",
       "desktop": {
         "entry": {
-          "GenericName": "Game Library Scout",
+          "GenericName": "Game Library Index",
           "Comment": "Find duplicates and cross-store details for your Steam and GOG games.",
           "Terminal": "false"
         }
