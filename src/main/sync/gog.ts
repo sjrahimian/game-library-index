@@ -12,8 +12,15 @@ export async function clearCookies() {
     }
   });
 
-  await authWindow.webContents.session.clearStorageData();
-  authWindow.close()
+  authWindow.hide()
+  try {
+    await authWindow.webContents.session.clearStorageData();
+    authWindow.close()
+  } catch (error) {
+    authWindow.close()
+    console.error(error);
+    throw error;
+  }
 }
 
 export async function performGogLoginAndFetch() {
@@ -32,19 +39,20 @@ export async function performGogLoginAndFetch() {
     await handleLogin(authWindow);
     console.log("Login confirmed. Starting data fetch...");
     await new Promise(resolve => setTimeout(resolve, 2000));
-
+    authWindow.hide();
 
     // Start of fetch data
     let page = 1;
     let maxPage = 1;
     let totalProducts = -1;
     let allProducts: any[] = [];
-
+    
     while (page <= maxPage) {
       console.log(`Fetching page ${page}/${maxPage}...`);
       
       // Fetch the specific page and wait for the result
       const data = await fetchPageData(authWindow, page);
+
       
       // Update maxPage from the API response
       if (data.totalPages && maxPage < Number(data.totalPages)) {
@@ -84,9 +92,10 @@ function handleLogin(window: BrowserWindow): Promise<void> {
     const loginUrl = 'https://auth.gog.com/auth?client_id=46899977096215655&redirect_uri=https%3A%2F%2Fembed.gog.com%2Fon_login_success%3Forigin%3Dclient&response_type=code&layout=default';
     window.loadURL(loginUrl);
 
-    const onNavigate = (event: any, url: string) => {
+    const onNavigate = async (event: any, url: string) => {
       // Check if we hit the success URL
       if (url.includes('on_login_success') && url.startsWith('https://embed.gog.com/on_login_success')) {
+        await window.webContents.session.cookies.flushStore();
         window.webContents.removeListener('did-navigate', onNavigate); // Cleanup listener
         resolve(); // Unblock the main function
       }

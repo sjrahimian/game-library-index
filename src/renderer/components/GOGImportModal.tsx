@@ -24,8 +24,9 @@ export default function GOGImportModal({ onClose }: Props) {
 
     try {
       const result = await fn();
-      console.log(result)
-      if (result) {
+      if (fn.toString().includes("clearGog")){
+        setStatus(`Successfully removed cookies.`);
+      } else if (result) {
         setStatus(`Success! Added ${result.count} new games.`);
       }
     } catch (err: any) {
