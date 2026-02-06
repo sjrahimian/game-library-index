@@ -69,6 +69,7 @@ export function syncSteamLibraryAndDB() {
 
     // Start hydration in background
     hydrateSteamGames(event).then(() => {
+      console.info("Hydration completed.")
       event.sender.send('hydration-finished');
     });
 

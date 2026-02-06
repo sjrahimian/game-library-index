@@ -153,6 +153,7 @@ export async function hydrateSteamGames(event: Electron.IpcMainInvokeEvent) {
   const gamesToHydrate = await db
     .select({
       id: games.id,
+      title: games.title,
       appId: store_entries.storeSpecificId,
     })
     .from(games)
@@ -206,6 +207,7 @@ export async function hydrateSteamGames(event: Electron.IpcMainInvokeEvent) {
           
         // IMPORTANT: Tell the frontend this specific game is ready
         event.sender.send('game-hydrated', { 
+          success: data[game.appId]?.success,
           gameId: game.id, 
           appId: game.appId,
           os: details.platforms,
@@ -213,11 +215,15 @@ export async function hydrateSteamGames(event: Electron.IpcMainInvokeEvent) {
           releaseDate: newDate,
         });
 
-        console.log(`Hydrated: ${details.name}`);
+        console.debug(`Hydrated: ${details.name}`);
+      } else {
+        const msg = `No Steam store page for: ${game.title} (${game.appId})`;
+        console.warn(msg)
+        event.sender.send('game-hydrated', {success: data[game.appId]?.success, msg: msg})
       }
 
     } catch (error) {
-      console.error(`Failed to hydrate appId ${game.appId}:`, error);
+      console.error(`Failed to hydrate: ${game.title} (${game.appId}):`, error);
     }
   }
 }

@@ -30,33 +30,38 @@ export default function GameLibraryTable() {
 // Inside GameLibraryGrid.tsx
 useEffect(() => {
   const handleUpdate = (data: any) => {
-    // 1. Update the React State first
-    setRowData(prevRows => {
-      return prevRows.map(row => {
-        if (row.id === data.gameId) {
-          // Safety check: Ensure stores exists before mapping
-          const currentStores = row.stores || [];
-          const updatedStores = currentStores.map((s: any) => 
-            s && s.name === 'Steam' ? { ...s, os: data.os } : s
-          );
+    if (data.success) {
+      // Update the React State first
+      setRowData(prevRows => {
+        return prevRows.map(row => {
+          if (row.id === data.gameId) {
+            // Safety check: Ensure stores exists before mapping
+            const currentStores = row.stores || [];
+            const updatedStores = currentStores.map((s: any) => 
+              s && s.name === 'Steam' ? { ...s, os: data.os } : s
+            );
 
-          return { 
-            ...row, 
-            stores: updatedStores,
-            category: data.category,
-            releaseDate: data.releaseDate
-          };
-        }
-        return row;
+            return { 
+              ...row, 
+              stores: updatedStores,
+              category: data.category,
+              releaseDate: data.releaseDate
+            };
+          }
+          return row;
+        });
       });
-    });
 
-    const api = gridRef.current?.api;
-    if (api) {
-      const rowNode = api.getRowNode(data.gameId.toString());
-      if (rowNode) {
-        api.refreshCells({ rowNodes: [rowNode], force: true });
+      const api = gridRef.current?.api;
+      if (api) {
+        const rowNode = api.getRowNode(data.gameId.toString());
+        if (rowNode) {
+          api.refreshCells({ rowNodes: [rowNode], force: true });
+        }
       }
+
+    } else {
+      console.warn(data.msg);
     }
   };
 
