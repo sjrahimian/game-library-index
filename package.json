@@ -204,7 +204,7 @@
         "dmg",
         "zip"
       ],
-      "artifactName": "${productName}_${version}_mac.${ext}",
+      "artifactName": "${name}_${version}_portable-mac.${ext}",
       "type": "distribution",
       "hardenedRuntime": true,
       "entitlements": "assets/entitlements.mac.plist",
@@ -225,9 +225,6 @@
           "path": "/Applications"
         }
       ]
-    },
-    "zip": {
-      "artifactName": "${name}_${version}_portable-mac.${ext}"
     },
     "win": {
       "target": [
