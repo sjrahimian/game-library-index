@@ -2,7 +2,7 @@
   "name": "game-library-index",
   "productName": "Game Library Index",
   "description": "A unified game directory that indexes your Steam and GOG libraries to uncover basic game details, OS info, and duplicate ownership.",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "keywords": [
     "electron",
     "boilerplate",
@@ -200,7 +200,10 @@
     ],
     "mac": {
       "notarize": false,
-      "target": ["dmg", "zip"],
+      "target": [
+        "dmg",
+        "zip"
+      ],
       "artifactName": "${productName}_${version}_mac.${ext}",
       "type": "distribution",
       "hardenedRuntime": true,
@@ -211,8 +214,16 @@
     "dmg": {
       "artifactName": "${name}_${version}_setup-mac.${ext}",
       "contents": [
-        { "x": 130, "y": 220 },
-        { "x": 410, "y": 220, "type": "link", "path": "/Applications" }
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
       ]
     },
     "zip": {
@@ -222,11 +233,15 @@
       "target": [
         {
           "target": "nsis",
-          "arch": [ "x64" ]
+          "arch": [
+            "x64"
+          ]
         },
         {
           "target": "portable",
-          "arch": [ "x64" ]
+          "arch": [
+            "x64"
+          ]
         }
       ]
     },
