@@ -200,16 +200,8 @@
     ],
     "mac": {
       "notarize": false,
-      "target": [
-        {
-          "target": "dmg",
-          "arch": ["arm64", "x64"]
-        },
-        {
-          "target": "zip", 
-          "arch": ["arm64", "x64"]
-        }
-      ],
+      "target": ["dmg", "zip"],
+      "artifactName": "${productName}_${version}_mac.${ext}",
       "type": "distribution",
       "hardenedRuntime": true,
       "entitlements": "assets/entitlements.mac.plist",
@@ -230,15 +222,11 @@
       "target": [
         {
           "target": "nsis",
-          "arch": [
-            "x64"
-          ]
+          "arch": [ "x64" ]
         },
         {
           "target": "portable",
-          "arch": [
-            "x64"
-          ]
+          "arch": [ "x64" ]
         }
       ]
     },
