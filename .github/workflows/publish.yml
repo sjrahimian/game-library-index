@@ -29,6 +29,13 @@ jobs:
       - name: Build and Publish
         run: |
           npm run build
-          npx electron-builder build --win --linux --mac --publish always
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            npx electron-builder build --win --publish always
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            npx electron-builder build --mac --publish always
+          else
+            npx electron-builder build --linux --publish always
+          fi
+        shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
