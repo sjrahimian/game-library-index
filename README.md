@@ -46,6 +46,7 @@ chmod +x game-library-index_linux_v*_portable.AppImage
 
 ## Development Setup
 
+Install Next.js and npm.
 After cloning the repository, or downloading via ZIP.
 
 ```bash
