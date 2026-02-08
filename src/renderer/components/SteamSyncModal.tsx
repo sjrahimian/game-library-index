@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
 // Local
 import { useHydration } from '../hooks/HydrationContext';
@@ -11,9 +12,7 @@ type Props = {
 };
 
 export default function SteamSyncModal({ onClose }: Props) {
-  const [loading, setLoading] = useState<'sync' | 'unofficial' | null>(null);
-  const [status, setStatus] = useState<string | null>(null);
-  const [error, setError] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const { isHydrating } = useHydration();
 
   // New state for inputs
@@ -21,35 +20,36 @@ export default function SteamSyncModal({ onClose }: Props) {
   const [steamId, setSteamId] = useState('');
 
   const runAction = async (type: 'official' | 'unofficial') => {
-    setStatus(null);
-    setError(false);
 
-    // 1. Validation Logic
+    // Validation Logic
     if (!steamId) {
-      setStatus('Warning: User ID is required.');
-      setError(true);
+      toast.warn('Warning: User ID is required.');
       return;
     }
 
     if (type === 'official' && !apiKey) {
-      setStatus('Warning: API Key is required for Official Sync.');
-      setError(true);
+      toast.warn('Warning: API Key is required for Official Sync.');
       return;
     }
 
     // 2. Execution Logic
-    setLoading('sync');
+    setLoading(true);
     try {
       const result = type === 'official' 
         ? await window.api.syncSteam(apiKey, steamId) 
         : await window.api.syncSteamUnofficial(steamId);
       
-      setStatus(`Success! Added ${result.count} new games.`);
+      toast.success(`Success! Added ${result.count} new games.`);
     } catch (err: any) {
-      setStatus(err?.message || `Failed to ${type} sync`);
-      setError(true);
+      console.error(err);
+      if (err?.message.includes("Failed to parse Steam response")) {
+        toast.error("Failed library sync. Provide correct User ID and API Key.")
+      } else {
+        toast.error(err?.message || `Failed to sync.`);
+      }
+
     } finally {
-      setLoading(null);
+      setLoading(false);
     }
   };
 
@@ -95,13 +95,13 @@ export default function SteamSyncModal({ onClose }: Props) {
           </button>
 
           {/* Unofficial Sync Button */}
-          <button
+          {/* <button
             disabled
             onClick={() => runAction('unofficial')}
             className="btn-secondary"
           >
             Unofficial Sync
-          </button>
+          </button> */}
 
           <button disabled={!!loading} onClick={onClose}>
             Close
@@ -122,11 +122,6 @@ export default function SteamSyncModal({ onClose }: Props) {
           </div>
         )}
 
-        {status && (
-          <div className={`status ${error ? 'error' : 'success'}`}>
-            {status}
-          </div>
-        )}
       </div>
     </div>
   );

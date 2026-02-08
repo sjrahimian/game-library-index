@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
 // Local
 import '../assets/css/modal.css';
@@ -10,30 +11,27 @@ type Props = {
 };
 
 export default function GOGImportModal({ onClose }: Props) {
-  const [loading, setLoading] = useState<'sync' | 'clear' | null>(null);
-  const [status, setStatus] = useState<string | null>(null);
-  const [error, setError] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const runAction = async (
     action: 'sync' | 'clear',
     fn: () => Promise<string>,
   ) => {
-    setLoading(action);
-    setStatus(null);
-    setError(false);
+    setLoading(true);
 
     try {
       const result = await fn();
       if (fn.toString().includes("clearGog")){
-        setStatus(`Successfully removed cookies.`);
+        toast.success(`Successfully removed cookies.`);
       } else if (result) {
-        setStatus(`Success! Added ${result.count} new games.`);
+        toast.success(`Success! Added ${result.count} new games.`);
       }
     } catch (err: any) {
-      setStatus(err?.message || `Failed to ${action}`);
-      setError(true);
+      toast.error(err?.message || `Failed to: ${action}`);
+      console.error(err?.message);
+      console.error(`Failed to: ${action}`);
     } finally {
-      setLoading(null);
+      setLoading(false);
     }
   };
 
@@ -65,19 +63,10 @@ export default function GOGImportModal({ onClose }: Props) {
         {loading && (
           <div className="loading">
             <div className="spinner" />
-            <span>
-              {loading === 'sync'
-                ? 'Waiting for GOG sync'
-                : 'Importing games…'}
-            </span>
+            <span>Syncing games…</span>
           </div>
         )}
 
-        {status && (
-          <div className={`status ${error ? 'error' : 'success'}`}>
-            {status}
-          </div>
-        )}
       </div>
     </div>
   );

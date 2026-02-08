@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Local libraries
 import GameLibraryTable from '../components/GameLibraryGrid';
@@ -88,6 +90,15 @@ export default function App() {
       {/* Modals... */}
       {showImport && <GOGImportModal onClose={() => setShowImport(false)} />}
       {showSteamImport && <SteamSyncModal onClose={() => setShowSteamImport(false)} />}
+      
+      {/* Notification */}
+      <div>
+        <ToastContainer 
+          position="top-left"
+          autoClose={3000}
+          theme="dark" // Matches your app's dark theme
+        />
+      </div>
     </>
   );
 }

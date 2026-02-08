@@ -3,6 +3,7 @@ import { ModuleRegistry, AllCommunityModule, ColDef } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
+import { toast } from 'react-toastify';
 
 // Local libraries
 import '../assets/css/game-table.css';
@@ -62,6 +63,7 @@ useEffect(() => {
 
     } else {
       console.warn(data.msg);
+      toast.warn(data.msg);
     }
   };
 
