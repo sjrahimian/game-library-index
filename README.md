@@ -6,9 +6,11 @@ Game Library Index is a basic, bare-bones directory for your digital collection.
 
 ## Getting Started
 
+Download the application from the latest [releases page](https://github.com/sjrahimian/game-library-index/releases/latest).
+
 ### GOG
 
-You will need to login into your GOG account (uses the unofficial APIs) to grab your game library.
+You will need to login into your GOG account (uses the unofficial APIs) to grab your game library. It's not perfect; it works better if you have your username/password on-hand for quick input, otherwise you may have to try once or twice for it to "stick" and grab the data.
 
 ### Steam
 
