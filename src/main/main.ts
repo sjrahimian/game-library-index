@@ -24,6 +24,22 @@ class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
+
+    // Triggered when an update is found and starting to download
+    autoUpdater.on('download-progress', (progressObj) => {
+      if (mainWindow) {
+        // Send progress percentage to the React frontend
+        mainWindow.webContents.send('update-progress', progressObj.percent);
+      }
+    });
+
+    // Triggered when the update is ready to be installed
+    autoUpdater.on('update-downloaded', () => {
+      if (mainWindow) {
+        mainWindow.webContents.send('update-ready');
+      }
+    });
+
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
@@ -133,6 +149,10 @@ app.whenReady().then(async () => {
   })
   .catch(console.log);
 
+
+ipcMain.on('restart-app', () => {
+  autoUpdater.quitAndInstall();
+});
   
 // ************************************ \\
 // IPC handlers account sync to game store

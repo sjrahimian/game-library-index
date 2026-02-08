@@ -21,11 +21,15 @@ const electronHandler = {
     once(channel: Channels, func: (...args: unknown[]) => void) {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
     },
+    restartApp() {
+      ipcRenderer.send('restart-app');
+    },
   },
 };
 
 
 contextBridge.exposeInMainWorld('api', {
+  
   getGames: () => ipcRenderer.invoke('get-games'),
   getLibraryStats: () => ipcRenderer.invoke('get-stats'),
   syncGog: () => ipcRenderer.invoke('sync:gog'),

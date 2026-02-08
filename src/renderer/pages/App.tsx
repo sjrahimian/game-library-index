@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Local libraries
@@ -12,6 +12,7 @@ import "../assets/css/App.css"
 import gogLight from '../assets/icons/gog-light.svg';
 import gogDark from '../assets/icons/gog-light.svg';
 import steam from '../assets/icons/steam-logo.svg';
+import { UpdateToast } from '../components/restart';
 
 
 
@@ -20,6 +21,29 @@ export default function App() {
   const [showSteamImport, setShowSteamImport] = useState(false);
   const [stats, setStats] = useState({ steam: 0, gog: 0, total: 0, duplicates: 0 });
   const { isHydrating } = useHydration();
+
+  useEffect(() => {
+    const toastId = "update-toast";
+
+    // Listen for progress percentage
+    window.electron.ipcRenderer.on('update-progress', (percent: number) => {
+      // Create or update a toast with the percentage
+      toast.info(`Downloading update: ${Math.round(percent)}%`, {
+        toastId: toastId,
+        progress: percent / 100,
+        autoClose: false, // Keep it open during download
+      });
+    });
+
+    // Listen for completion
+    useEffect(() => {
+      window.electron.ipcRenderer.on('update-ready', () => {
+        toast.info(<UpdateToast />, {
+          position: "bottom-right",
+          autoClose: false,
+        });
+      });
+    }, []);
 
   // Refresh stats whenever a sync completes
   const refreshStats = async () => {
