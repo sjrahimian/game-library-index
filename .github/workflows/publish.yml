@@ -2,8 +2,10 @@ name: Publish Release
 
 on:
   push:
+    branches:
+      - master
     tags:
-      - 'v*' # Runs only when you push a tag starting with 'v' (e.g., v0.4.6)
+      - 'v*' # (e.g., v0.0.1)
 
 jobs:
   publish:
