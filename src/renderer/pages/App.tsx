@@ -13,7 +13,25 @@ import gogLight from '../assets/icons/gog-light.svg';
 import gogDark from '../assets/icons/gog-light.svg';
 import steam from '../assets/icons/steam-logo.svg';
 
-
+const UpdateToast = () => (
+  <div>
+    Update Downloaded! Restart the app to apply changes.
+    <button 
+      onClick={() => window.electron.ipcRenderer.restartApp()}
+      style={{
+        marginLeft: '10px',
+        padding: '4px 8px',
+        background: '#2ecc71',
+        color: 'white',
+        border: 'none',
+        borderRadius: '4px',
+        cursor: 'pointer'
+      }}
+    >
+      Restart Now
+    </button>
+  </div>
+);
 
 export default function App() {
   const [showImport, setShowImport] = useState(false);
@@ -21,48 +39,44 @@ export default function App() {
   const [stats, setStats] = useState({ steam: 0, gog: 0, total: 0, duplicates: 0 });
   const { isHydrating } = useHydration();
 
-  const UpdateToast = () => (
-    <div>
-      Update Downloaded! Restart the app to apply changes.
-      <button 
-        onClick={() => window.electron.ipcRenderer.restartApp()}
-        style={{
-          marginLeft: '10px',
-          padding: '4px 8px',
-          background: '#2ecc71',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer'
-        }}
-      >
-        Restart Now
-      </button>
-    </div>
-  );
-
+  // Magic for the updater
   useEffect(() => {
-    const toastId = "update-toast";
+    const toastId = "app-updater";
 
-    // Listen for progress percentage
-    window.electron.ipcRenderer.on('update-progress', (percent: number) => {
-      // Create or update a toast with the percentage
-      toast.info(`Downloading update: ${Math.round(percent)}%`, {
-        toastId: toastId,
-        progress: percent / 100,
-        autoClose: false, // Keep it open during download
-      });
-    });
-    
-    // Listen for completion
-    useEffect(() => {
-      window.electron.ipcRenderer.on('update-ready', () => {
-        toast.info(<UpdateToast />, {
-          position: "bottom-right",
+    // Show update in progress
+    const unsubscribeProgress = window.electron.ipcRenderer.on('update-progress', (percent: number) => {
+      // Calculate 0.0 to 1.0 for the library
+      const progress = percent / 100;
+      if (!toast.isActive(toastId)) {
+        toast.info(`Downloading Update... ${Math.round(percent)}%`, {
+          toastId: toastId,
+          progress: progress,
           autoClose: false,
+          closeOnClick: false,
         });
+      } else {
+        toast.update(toastId, {
+          render: `Downloading Update... ${Math.round(percent)}%`,
+          progress: progress,
+        });
+      }
+    });
+
+    // Handle Completion (Morphs the progress bar into the Button)
+    const unsubscribeReady = window.electron.ipcRenderer.on('update-ready', () => {
+      toast.update(toastId, {
+        render: <UpdateToast />,
+        type: 'success',
+        progress: undefined,
+        autoClose: false,
+        closeButton: true
       });
     });
+
+    return () => {
+      if (unsubscribeProgress) unsubscribeProgress();
+      if (unsubscribeReady) unsubscribeReady();
+    };
   }, []);
 
   // Refresh stats whenever a sync completes
