@@ -12,7 +12,6 @@ import "../assets/css/App.css"
 import gogLight from '../assets/icons/gog-light.svg';
 import gogDark from '../assets/icons/gog-light.svg';
 import steam from '../assets/icons/steam-logo.svg';
-import { UpdateToast } from '../components/restart';
 
 
 
@@ -21,6 +20,26 @@ export default function App() {
   const [showSteamImport, setShowSteamImport] = useState(false);
   const [stats, setStats] = useState({ steam: 0, gog: 0, total: 0, duplicates: 0 });
   const { isHydrating } = useHydration();
+
+  const UpdateToast = () => (
+    <div>
+      Update Downloaded! Restart the app to apply changes.
+      <button 
+        onClick={() => window.electron.ipcRenderer.restartApp()}
+        style={{
+          marginLeft: '10px',
+          padding: '4px 8px',
+          background: '#2ecc71',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer'
+        }}
+      >
+        Restart Now
+      </button>
+    </div>
+  );
 
   useEffect(() => {
     const toastId = "update-toast";
@@ -34,7 +53,7 @@ export default function App() {
         autoClose: false, // Keep it open during download
       });
     });
-
+    
     // Listen for completion
     useEffect(() => {
       window.electron.ipcRenderer.on('update-ready', () => {
@@ -43,7 +62,8 @@ export default function App() {
           autoClose: false,
         });
       });
-    }, []);
+    });
+  }, []);
 
   // Refresh stats whenever a sync completes
   const refreshStats = async () => {
