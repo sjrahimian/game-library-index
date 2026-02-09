@@ -3,11 +3,14 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Local libraries
+import { GameDataTable } from "../components/table/data-table";
+import { columns } from "../components/table/columns";
 import GameLibraryTable from '../components/GameLibraryGrid';
 import GOGImportModal from '../components/GOGImportModal';
 import SteamSyncModal from '../components/SteamSyncModal';
 import { useHydration } from '../hooks/HydrationContext';
 import "../assets/css/App.css"
+import "../assets/css/dist.css"
 
 import gogLight from '../assets/icons/gog-light.svg';
 import gogDark from '../assets/icons/gog-light.svg';
@@ -38,6 +41,14 @@ export default function App() {
   const [showSteamImport, setShowSteamImport] = useState(false);
   const [stats, setStats] = useState({ steam: 0, gog: 0, total: 0, duplicates: 0 });
   const { isHydrating } = useHydration();
+  const [rowData, setRowData] = useState([]);
+
+  useEffect(() => {
+    window.api.getGames().then(setRowData);
+    
+    // Your existing hydration/sync listeners go here, 
+    // just calling setRowData(newData) will refresh the TanStack table.
+  }, []);
 
   // Magic for the updater
   useEffect(() => {
@@ -91,7 +102,8 @@ export default function App() {
   }, []);
 
   return (
-    <>
+    <div className="mx-auto max-w-5xl px-6 py-8">
+
       <header className="toolbar">
         <div className="button-group">
           <button className="btn-gog" onClick={() => setShowImport(true)}>
@@ -142,8 +154,8 @@ export default function App() {
           )}
         </div>
       </header>
-      
-      <GameLibraryTable />
+     
+      <GameDataTable columns={columns} data={rowData} />;
 
       {/* Modals... */}
       {showImport && <GOGImportModal onClose={() => setShowImport(false)} />}
@@ -157,6 +169,6 @@ export default function App() {
           theme="dark" // Matches your app's dark theme
         />
       </div>
-    </>
+    </div>
   );
 }
