@@ -3,12 +3,11 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Local libraries
-import { GameDataTable } from "../components/table/data-table";
-import { columns } from "../components/table/columns";
-import GameLibraryTable from '../components/GameLibraryGrid';
 import GOGImportModal from '../components/GOGImportModal';
 import SteamSyncModal from '../components/SteamSyncModal';
-import { useHydration } from '../hooks/HydrationContext';
+import { GameDataTable } from "../components/GameDataTable";
+import { columns } from "../components/table/columns";
+import { HeaderToolbar } from "../components/HeaderToolbar"; // Import the new component
 import "../assets/css/App.css"
 import "../assets/css/dist.css"
 
@@ -37,10 +36,10 @@ const UpdateToast = () => (
 );
 
 export default function App() {
+  const [globalFilter, setGlobalFilter] = useState("");
   const [showImport, setShowImport] = useState(false);
   const [showSteamImport, setShowSteamImport] = useState(false);
   const [stats, setStats] = useState({ steam: 0, gog: 0, total: 0, duplicates: 0 });
-  const { isHydrating } = useHydration();
   const [rowData, setRowData] = useState([]);
 
   useEffect(() => {
@@ -103,59 +102,22 @@ export default function App() {
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-8">
+      {/* Header with search and sync buttons */}
+      <HeaderToolbar 
+        stats={stats}
+        searchQuery={globalFilter}
+        onSearchChange={setGlobalFilter}
+        onImportGOG={() => setShowImport(true)}
+        onImportSteam={() => setShowSteamImport(true)}
+      />
 
-      <header className="toolbar">
-        <div className="button-group">
-          <button className="btn-gog" onClick={() => setShowImport(true)}>
-            <img width="30" alt="gog icon" src={gogLight} />
-            GOG Library
-          </button>
-          <button className="btn-steam" onClick={() => setShowSteamImport(true)}>
-            <img width="30" alt="steam icon" src={steam} />
-            Steam Library
-          </button>
-        </div>
-
-        {isHydrating && (
-          <div className="stats-container">
-          <span className="stat-badge stat-hydrate">
-            <div className="stat-badge" style={{ background: '#004225' }}>
-              Enriching Data <span className="hydrating-dot"></span>
-            </div>
-          </span>
-          </div>
-        )}
-
-        <div className="stats-container">
-          {stats.gog !== 0 && (
-            <span className="stat-badge stat-gog">
-              <img width="20" alt="gog icon" src={gogLight} />
-              {stats.gog}
-            </span>
-          )}
-          {stats.steam !== 0 && (
-            <span className="stat-badge stat-steam">
-              <img width="20" alt="steam icon" src={steam} />
-              {stats.steam}
-            </span>
-          )}
-          {stats.total !== 0 && stats.duplicates !== 0 && (
-            <span className="stat-badge stat-total">
-              Unique: {stats.total - stats.duplicates}
-            </span>
-          )}
-            <span className="stat-badge stat-total">
-              Owned: {stats.total}
-            </span>
-          {stats.duplicates !== 0 && (
-            <span className="stat-badge stat-dupe">
-              Duplicates ♊ {stats.duplicates}
-            </span>
-          )}
-        </div>
-      </header>
-     
-      <GameDataTable columns={columns} data={rowData} />;
+      {/** Table that shows games */}
+      <GameDataTable 
+        columns={columns} 
+        data={rowData} 
+        globalFilter={globalFilter} 
+        setGlobalFilter={setGlobalFilter}
+      />
 
       {/* Modals... */}
       {showImport && <GOGImportModal onClose={() => setShowImport(false)} />}

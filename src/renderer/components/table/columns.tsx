@@ -1,6 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Check, Layers2, X } from "lucide-react";
 
 export type Store = {
   name: string;
@@ -20,12 +21,34 @@ export const columns: ColumnDef<Game>[] = [
   {
     accessorKey: "title",
     header: "Title",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        {row.original.duplicate && <span title="Duplicate">♊</span>}
-        <span className="font-medium">{row.getValue("title")}</span>
-      </div>
-    ),
+    cell: ({ row }) => {
+      const title = row.getValue("title") as string;
+      const isTruncated = title.length > 35;
+      const displayTitle = isTruncated 
+        ? title.substring(0, 35) + "..." 
+        : title;
+  
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center gap-2 cursor-default">
+                {row.original.duplicate &&  <span title="Duplicate">
+                  <Layers2 className="w-3 h-3 mr-2" />
+                </span> }
+                <span className="font-medium">{displayTitle}</span>
+              </div>
+            </TooltipTrigger>
+            {/* Only show the tooltip if the title was truncated */}
+            {isTruncated && (
+              <TooltipContent>
+                <p className="max-w-xs">{title}</p>
+              </TooltipContent>
+            )}
+          </Tooltip>
+        </TooltipProvider>
+      );
+    },
   },
   {
     accessorKey: "category",
@@ -40,8 +63,8 @@ export const columns: ColumnDef<Game>[] = [
         {(row.getValue("stores") as Store[])?.map((store) => (
           <Badge 
             key={store.name} 
-            variant="outline" 
-            className={`store-${store.name.toLowerCase()}`}
+            variant={`${store.name.toLowerCase()}`}
+            className="pointer-events-none"
           >
             {store.name}
           </Badge>
@@ -56,7 +79,7 @@ export const columns: ColumnDef<Game>[] = [
   },
   {
     id: "osSupport",
-    header: "OS Support",
+    header: "Platform",
     cell: ({ row }) => {
       const stores = row.original.stores || [];
       const osList = [
@@ -91,7 +114,11 @@ export const columns: ColumnDef<Game>[] = [
                   <TooltipContent>
                     <p className="font-bold border-b mb-1">{key}</p>
                     {support.map(s => (
-                      <p key={s.name} className="text-xs">{s.name}: {s.supported ? "✅" : "❌"}</p>
+                      <div>
+                        <p key={s.name} className="flex items-center gap-0.5 text-xs">
+                          {s.name}: {s.supported ? <Check className="w-4 h-4 text-green-600" /> : <X className="w-4 h-4 text-red-600" />}
+                        </p>
+                      </div>
                     ))}
                   </TooltipContent>
                 </Tooltip>

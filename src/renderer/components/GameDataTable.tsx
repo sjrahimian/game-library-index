@@ -12,20 +12,21 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  globalFilter: string; // For search
+  setGlobalFilter: (val: string) => void;
 }
 
-export function GameDataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
-  const [globalFilter, setGlobalFilter] = useState("");
+export function GameDataTable<TData, TValue>({ columns, data, globalFilter, setGlobalFilter }: DataTableProps<TData, TValue>) {
 
 // Initialize pagination state
 const [pagination, setPagination] = useState<PaginationState>({
@@ -50,12 +51,12 @@ const [pagination, setPagination] = useState<PaginationState>({
   return (
     <div className="space-y-4">
       {/* Search input logic */}
-      <Input
+      {/* <Input
         placeholder="Search library..."
         value={globalFilter ?? ""}
         onChange={(e) => setGlobalFilter(e.target.value)}
         className="max-w-sm"
-      />
+      /> */}
 
       {/* Table container logic */}          
       <div className="rounded-md border bg-card text-card-foreground shadow flex flex-col h-[550px]">

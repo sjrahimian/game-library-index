@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* This tells Tailwind to look for the .dark class on <html> or any parent */
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   /* Map your shadcn variables to Tailwind's theme */
@@ -25,47 +27,79 @@
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
+
+
+  
+  /* Direct mapping for Hex */
+  /* --color-gog: var(--brand-gog);
+  --color-gog-background: var(--brand-gog-background); */
+  --color-gog: hsl(var(--brand-gog-text));
+  --color-gog-background: hsla(var(--brand-gog-bg));
+  --color-gog-border: 1px solid hsla(var(--brand-gog-text) / 0.3);
+  --color-steam: hsl(var(--brand-steam-text));
+  --color-steam-background: hsla(var(--brand-steam-bg));
+  --color-steam-border: 1px solid hsla(var(--brand-steam-text) / 0.3);
+  
 }
 
+
+
+
+/* App.css */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    /* ... keep the rest of your light mode variables here ... */
-    --border: 214.3 31.8% 91.4%;
-    --popover: hsla(0, 0%, 91%, 0.90);
-    --popover-foreground: #020817;
-    --muted: hsl(0, 0%, 91%, 0.75);
-  }
+    --background: #f8fafc;
+    --foreground: #131313;
+    --border: #1e293b;
+    
+    /* Popover (Dropdowns) */
+    --popover: #ffffff;
+    --popover-foreground: #1e293b;
 
+    /* Custom Brand Variables in Hex */
+    /* --brand-gog: #c084fc;
+    --brand-gog-background: rgba(134, 50, 138, 0.40);
+    --brand-steam: #1b2838; 
+    --brand-steam-background: #1b283826;
+    --brand-steam-border: 1px solid #1b2838; */
+    --brand-gog-bg: 298 47% 37% / 0.15;
+    --brand-gog-text: 298 47% 37%;
+    --brand-steam-bg: 213 35% 15% / 0.15;
+    --brand-steam-text: 213 35% 15%;
+  }
+  
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    /* ... keep the rest of your dark mode variables here ... */
-    --border: 217.2 32.6% 17.5%;
-    --popover: #252525e0;
-    --popover-foreground: #020817;
+    --background: #131313;
+    --foreground: #d1d1d1;
+    --border: #d1d1d1;
+
+    /* Dark Mode Popover Logic - Fixed the inversion here */
+    --popover: #1e293b; /* Darker gray background */
+    --popover-foreground: #f8fafc; /* Light text */
+    
+    /* Custom Brand (Dark Mode) */
+    /* --brand-gog: #c084fc;
+    --brand-gog-background: rgba(134, 50, 138, 0.50);
+    --brand-steam: #93c5fd;
+    --brand-steam-background: #61a6fa26; 
+    --brand-steam-border: 1px solid #93c5fd; */
+    --brand-gog-bg: 298 90% 73% / 0.15;
+    --brand-gog-text: 298 90% 85%;
+    --brand-steam-bg: 214 95% 68% / 0.15;
+    --brand-steam-text: 214 95% 75%;
   }
 }
 
-/* Update your store pill logic in App.css */
-.store-steam {
-  background-color: rgb(27, 40, 56, 0.15) !important; /* Soft Blue */
-  color: #60a5fa !important; /* Bright Blue */
-  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+.store-badge-steam {
+  background-color: hsla(var(--brand-steam-bg)) !important;
+  color: hsl(var(--brand-steam-text)) !important;
+  border: 1px solid hsla(var(--brand-steam-text) / 0.3) !important;
 }
 
-.store-gog {
-  background-color: rgb(134, 50, 138, 0.15) !important; /* Soft Purple */
-  color: #c084fc !important; /* Bright Purple */
-  border: 1px solid rgba(168, 85, 247, 0.3) !important;
-}
-
-.store-epic {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  color: #f8fafc !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-
+.store-badge-gog {
+  background-color: hsla(var(--brand-gog-bg)) !important;
+  color: hsl(var(--brand-gog-text)) !important;
+  border: 1px solid hsla(var(--brand-gog-text) / 0.3) !important;
 }
 
 /* Toolbar Layout */

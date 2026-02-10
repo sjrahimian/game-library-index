@@ -7,8 +7,18 @@
       content="script-src 'self' 'unsafe-inline'"
     />
     <title>Game Library Index</title>
+
+    <script>
+      if (localStorage.getItem('theme') === 'dark' || 
+         (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+
   </head>
-  <body>
-    <div id="root"></div>
+  <body class="bg-background text-foreground">
+    <div id="root" ></div>
   </body>
 </html>
