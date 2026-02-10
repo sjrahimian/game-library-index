@@ -123,12 +123,12 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuItem onClick={onImportGOG} className="cursor-pointer focus:bg-accent">
+            <DropdownMenuItem onClick={onImportGOG} className="cursor-pointer focus:bg-accent focus:text-accent-foreground">
               <Plus className="w-4 h-4 mr-2" />
               Sync GOG
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-border" />
-            <DropdownMenuItem onClick={onImportSteam} className="cursor-pointer focus:bg-[#707070]/20 focus:text-[#2d2d2d] focus:bg-accent">
+            <DropdownMenuItem onClick={onImportSteam} className="cursor-pointer focus:bg-accent focus:text-accent-foreground">
               <div className={`flex items-center gap-2 text-xs font-medium ${isHydrating ? "text-blue-500 animate-pulse" :  "text-[#1b2838] dark:text-slate-400"}`}>
                 <RefreshCw className={`w-4 h-4 mr-2 ${isHydrating ? "text-blue-500 animate-spin" : "text-[#1b2838] dark:text-slate-400"}`} />
               </div>

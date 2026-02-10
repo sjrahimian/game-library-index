@@ -262,9 +262,6 @@
   .top-0 {
     top: calc(var(--spacing) * 0);
   }
-  .top-1 {
-    top: calc(var(--spacing) * 1);
-  }
   .top-1\/2 {
     top: calc(1/2 * 100%);
   }
@@ -448,17 +445,11 @@
   .flex-1 {
     flex: 1;
   }
-  .flex-shrink {
-    flex-shrink: 1;
-  }
   .shrink-0 {
     flex-shrink: 0;
   }
   .caption-bottom {
     caption-side: bottom;
-  }
-  .border-collapse {
-    border-collapse: collapse;
   }
   .border-separate {
     border-collapse: separate;
@@ -476,10 +467,6 @@
   }
   .origin-\[--radix-tooltip-content-transform-origin\] {
     transform-origin: --radix-tooltip-content-transform-origin;
-  }
-  .-translate-y-1 {
-    --tw-translate-y: calc(var(--spacing) * -1);
-    translate: var(--tw-translate-x) var(--tw-translate-y);
   }
   .-translate-y-1\/2 {
     --tw-translate-y: calc(calc(1/2 * 100%) * -1);
@@ -503,17 +490,11 @@
   .cursor-pointer {
     cursor: pointer;
   }
-  .resize {
-    resize: both;
-  }
   .flex-col {
     flex-direction: column;
   }
   .flex-nowrap {
     flex-wrap: nowrap;
-  }
-  .flex-wrap {
-    flex-wrap: wrap;
   }
   .items-center {
     align-items: center;
@@ -526,9 +507,6 @@
   }
   .justify-end {
     justify-content: flex-end;
-  }
-  .gap-0 {
-    gap: calc(var(--spacing) * 0);
   }
   .gap-0\.5 {
     gap: calc(var(--spacing) * 0.5);
@@ -547,13 +525,6 @@
   }
   .gap-6 {
     gap: calc(var(--spacing) * 6);
-  }
-  .space-y-1 {
-    :where(& > :not(:last-child)) {
-      --tw-space-y-reverse: 0;
-      margin-block-start: calc(calc(var(--spacing) * 1) * var(--tw-space-y-reverse));
-      margin-block-end: calc(calc(var(--spacing) * 1) * calc(1 - var(--tw-space-y-reverse)));
-    }
   }
   .space-y-1\.5 {
     :where(& > :not(:last-child)) {
@@ -709,9 +680,6 @@
   .p-6 {
     padding: calc(var(--spacing) * 6);
   }
-  .px-1 {
-    padding-inline: calc(var(--spacing) * 1);
-  }
   .px-1\.5 {
     padding-inline: calc(var(--spacing) * 1.5);
   }
@@ -732,9 +700,6 @@
   }
   .px-8 {
     padding-inline: calc(var(--spacing) * 8);
-  }
-  .py-0 {
-    padding-block: calc(var(--spacing) * 0);
   }
   .py-0\.5 {
     padding-block: calc(var(--spacing) * 0.5);
@@ -888,9 +853,6 @@
   .uppercase {
     text-transform: uppercase;
   }
-  .underline {
-    text-decoration-line: underline;
-  }
   .underline-offset-4 {
     text-underline-offset: 4px;
   }
@@ -922,9 +884,6 @@
   .outline {
     outline-style: var(--tw-outline-style);
     outline-width: 1px;
-  }
-  .filter {
-    filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
   }
   .transition-all {
     transition-property: all;
@@ -1052,42 +1011,12 @@
       }
     }
   }
-  .hover\:bg-gog-background\/40 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: color-mix(in srgb, hsla(var(--brand-gog-bg)) 40%, transparent);
-        @supports (color: color-mix(in lab, red, red)) {
-          background-color: color-mix(in oklab, var(--color-gog-background) 40%, transparent);
-        }
-      }
-    }
-  }
   .hover\:bg-gog-background\/60 {
     &:hover {
       @media (hover: hover) {
         background-color: color-mix(in srgb, hsla(var(--brand-gog-bg)) 60%, transparent);
         @supports (color: color-mix(in lab, red, red)) {
           background-color: color-mix(in oklab, var(--color-gog-background) 60%, transparent);
-        }
-      }
-    }
-  }
-  .hover\:bg-gog-background\/70 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: color-mix(in srgb, hsla(var(--brand-gog-bg)) 70%, transparent);
-        @supports (color: color-mix(in lab, red, red)) {
-          background-color: color-mix(in oklab, var(--color-gog-background) 70%, transparent);
-        }
-      }
-    }
-  }
-  .hover\:bg-gog-background\/80 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: color-mix(in srgb, hsla(var(--brand-gog-bg)) 80%, transparent);
-        @supports (color: color-mix(in lab, red, red)) {
-          background-color: color-mix(in oklab, var(--color-gog-background) 80%, transparent);
         }
       }
     }
@@ -1132,52 +1061,12 @@
       }
     }
   }
-  .hover\:bg-steam-background\/40 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: color-mix(in srgb, hsla(var(--brand-steam-bg)) 40%, transparent);
-        @supports (color: color-mix(in lab, red, red)) {
-          background-color: color-mix(in oklab, var(--color-steam-background) 40%, transparent);
-        }
-      }
-    }
-  }
   .hover\:bg-steam-background\/60 {
     &:hover {
       @media (hover: hover) {
         background-color: color-mix(in srgb, hsla(var(--brand-steam-bg)) 60%, transparent);
         @supports (color: color-mix(in lab, red, red)) {
           background-color: color-mix(in oklab, var(--color-steam-background) 60%, transparent);
-        }
-      }
-    }
-  }
-  .hover\:bg-steam-background\/70 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: color-mix(in srgb, hsla(var(--brand-steam-bg)) 70%, transparent);
-        @supports (color: color-mix(in lab, red, red)) {
-          background-color: color-mix(in oklab, var(--color-steam-background) 70%, transparent);
-        }
-      }
-    }
-  }
-  .hover\:bg-steam-background\/75 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: color-mix(in srgb, hsla(var(--brand-steam-bg)) 75%, transparent);
-        @supports (color: color-mix(in lab, red, red)) {
-          background-color: color-mix(in oklab, var(--color-steam-background) 75%, transparent);
-        }
-      }
-    }
-  }
-  .hover\:bg-steam-background\/80 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: color-mix(in srgb, hsla(var(--brand-steam-bg)) 80%, transparent);
-        @supports (color: color-mix(in lab, red, red)) {
-          background-color: color-mix(in oklab, var(--color-steam-background) 80%, transparent);
         }
       }
     }
@@ -1196,19 +1085,9 @@
       }
     }
   }
-  .focus\:bg-\[\#707070\]\/20 {
-    &:focus {
-      background-color: color-mix(in oklab, #707070 20%, transparent);
-    }
-  }
   .focus\:bg-accent {
     &:focus {
       background-color: var(--color-accent);
-    }
-  }
-  .focus\:text-\[\#2d2d2d\] {
-    &:focus {
-      color: #2d2d2d;
     }
   }
   .focus\:text-accent-foreground {
@@ -1436,9 +1315,11 @@
   :root {
     --background: #f8fafc;
     --foreground: #131313;
-    --border: #1e293b;
+    --border: #131313;
     --popover: #ffffff;
-    --popover-foreground: #1e293b;
+    --popover-foreground: #0f172a;
+    --accent: #e4e4e4;
+    --accent-foreground: #131313;
     --brand-gog-bg: 298 47% 37% / 0.15;
     --brand-gog-text: 298 47% 37%;
     --brand-steam-bg: 213 35% 15% / 0.15;
@@ -1448,8 +1329,10 @@
     --background: #131313;
     --foreground: #d1d1d1;
     --border: #d1d1d1;
-    --popover: #1e293b;
-    --popover-foreground: #f8fafc;
+    --popover: #131313;
+    --popover-foreground: #d1d1d1;
+    --accent: #283750;
+    --accent-foreground: #f8fafc;
     --brand-gog-bg: 298 90% 73% / 0.15;
     --brand-gog-text: 298 90% 85%;
     --brand-steam-bg: 214 95% 68% / 0.15;
@@ -1696,6 +1579,10 @@
   inherits: false;
   initial-value: solid;
 }
+@property --tw-duration {
+  syntax: "*";
+  inherits: false;
+}
 @property --tw-blur {
   syntax: "*";
   inherits: false;
@@ -1749,10 +1636,6 @@
   syntax: "*";
   inherits: false;
 }
-@property --tw-duration {
-  syntax: "*";
-  inherits: false;
-}
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -1797,6 +1680,7 @@
       --tw-ring-offset-color: #fff;
       --tw-ring-offset-shadow: 0 0 #0000;
       --tw-outline-style: solid;
+      --tw-duration: initial;
       --tw-blur: initial;
       --tw-brightness: initial;
       --tw-contrast: initial;
@@ -1810,7 +1694,6 @@
       --tw-drop-shadow-color: initial;
       --tw-drop-shadow-alpha: 100%;
       --tw-drop-shadow-size: initial;
-      --tw-duration: initial;
     }
   }
 }

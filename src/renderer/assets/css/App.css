@@ -50,18 +50,15 @@
   :root {
     --background: #f8fafc;
     --foreground: #131313;
-    --border: #1e293b;
+    --border: #131313;
     
     /* Popover (Dropdowns) */
     --popover: #ffffff;
-    --popover-foreground: #1e293b;
+    --popover-foreground: #0f172a;
+    --accent: #e4e4e4;
+    --accent-foreground: #131313;
 
     /* Custom Brand Variables in Hex */
-    /* --brand-gog: #c084fc;
-    --brand-gog-background: rgba(134, 50, 138, 0.40);
-    --brand-steam: #1b2838; 
-    --brand-steam-background: #1b283826;
-    --brand-steam-border: 1px solid #1b2838; */
     --brand-gog-bg: 298 47% 37% / 0.15;
     --brand-gog-text: 298 47% 37%;
     --brand-steam-bg: 213 35% 15% / 0.15;
@@ -74,8 +71,10 @@
     --border: #d1d1d1;
 
     /* Dark Mode Popover Logic - Fixed the inversion here */
-    --popover: #1e293b; /* Darker gray background */
-    --popover-foreground: #f8fafc; /* Light text */
+    --popover: #131313;
+    --popover-foreground: #d1d1d1;
+    --accent: #283750;
+    --accent-foreground: #f8fafc;
     
     /* Custom Brand (Dark Mode) */
     /* --brand-gog: #c084fc;
