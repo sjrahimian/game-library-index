@@ -19,7 +19,7 @@ const badgeVariants = cva(
         gog: 
           "border-transparent bg-gog-background text-gog hover:bg-gog-background/60",
         steam: 
-          "border-transparent bg-steam-background text-steam hover:bg-steam-background/60",
+          "border-transparent bg-steam-background text-steam-text hover:bg-steam-background/60",
       },
     },
     defaultVariants: {

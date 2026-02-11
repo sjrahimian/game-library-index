@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-
-// Local
 import { useHydration } from '../hooks/HydrationContext';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Loader2 } from "lucide-react";
 
-import '../assets/css/modal.css';
+// Assets
 import steam from '../assets/icons/steam-logo.svg';
 
 type Props = {
@@ -13,116 +22,84 @@ type Props = {
 
 export default function SteamSyncModal({ onClose }: Props) {
   const [loading, setLoading] = useState<boolean>(false);
-  const { isHydrating } = useHydration();
-
-  // New state for inputs
+  // const { isHydrating } = useHydration();
+  const isHydrating = true;
   const [apiKey, setApiKey] = useState('');
   const [steamId, setSteamId] = useState('');
 
-  const runAction = async (type: 'official' | 'unofficial') => {
+  const runAction = async () => {
+    if (!steamId) return toast.warn('User ID is required.');
+    if (!apiKey) return toast.warn('API Key is required.');
 
-    // Validation Logic
-    if (!steamId) {
-      toast.warn('Warning: User ID is required.');
-      return;
-    }
-
-    if (type === 'official' && !apiKey) {
-      toast.warn('Warning: API Key is required for Official Sync.');
-      return;
-    }
-
-    // 2. Execution Logic
     setLoading(true);
     try {
-      const result = type === 'official' 
-        ? await window.api.syncSteam(apiKey, steamId) 
-        : await window.api.syncSteamUnofficial(steamId);
-      
+      const result = await window.api.syncSteam(apiKey, steamId);
       toast.success(`Success! Added ${result.count} new games.`);
     } catch (err: any) {
-      console.error(err);
-      if (err?.message.includes("Failed to parse Steam response")) {
-        toast.error("Failed library sync. Provide correct User ID and API Key.")
-      } else {
-        toast.error(err?.message || `Failed to sync.`);
-      }
-
+      toast.error(err?.message || "Failed to sync.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="modal-backdrop">
-      <div className="modal">
-        <h2>
-          <img width="35" alt="steam icon" src={steam} />
-          Sync Steam Library
-        </h2>
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[420px]">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-4">
+            <img src={steam} alt="Steam" className="w-8 h-8 shrink-0" />
+            Sync Steam Library
+          </DialogTitle>
+        </DialogHeader>
 
-        {/* New Input Fields */}
-        <div className="input-group">
-          <input 
-            type="text" 
-            id="steamId"
-            value={steamId} 
-            onChange={(e) => setSteamId(e.target.value)}
-            placeholder=" "
-          />
-          <label htmlFor="steamId">Steam User ID (Required)</label>
+        <div className="grid gap-4 py-4">
+          <div className="grid gap-2">
+            <Label htmlFor="steamId">Steam User ID</Label>
+            <Input 
+              id="steamId" 
+              value={steamId} 
+              onChange={(e) => setSteamId(e.target.value)} 
+              placeholder="Enter your SteamID64"
+              maxLength={17} // Helpful boundary
+            />
+            <p className="text-[10px] text-muted-foreground">
+              Found in your profile URL (usually 17 digits).
+            </p>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="apiKey">API Key</Label>
+            <Input 
+              id="apiKey" 
+              type="password"
+              value={apiKey} 
+              onChange={(e) => setApiKey(e.target.value)} 
+              placeholder="Enter Official API Key"
+            />
+          </div>
+          
+          {(loading || isHydrating) && (
+            <div className="flex flex-col gap-2 pt-2">
+              <div className="flex items-center gap-2 text-sm text-blue-500 font-medium">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                {isHydrating ? "Enriching data..." : "Syncing games…"}
+              </div>
+            </div>
+          )}
         </div>
 
-        <div className="input-group">
-          <input 
-            type="text" 
-            id="apiKey"
-            value={apiKey} 
-            onChange={(e) => setApiKey(e.target.value)}
-            placeholder=" " 
-          />
-          <label htmlFor="apiKey">API Key (Official Only)</label>
-        </div>
-
-        <div className="modal-actions">
-          {/* Official Sync Button */}
-          <button
-            disabled={!!loading || !!isHydrating}
-            onClick={() => runAction('official')}
-            className="btn-primary"
+        <DialogFooter>
+          <Button 
+            disabled={loading || isHydrating} 
+            onClick={runAction}
+            className="bg-steam hover:bg-steam/80"
           >
             Official API Sync
-          </button>
-
-          {/* Unofficial Sync Button */}
-          {/* <button
-            disabled
-            onClick={() => runAction('unofficial')}
-            className="btn-secondary"
-          >
-            Unofficial Sync
-          </button> */}
-
-          <button disabled={!!loading} onClick={onClose}>
+          </Button>
+          <Button variant="ghost" onClick={onClose} disabled={loading}>
             Close
-          </button>
-        </div>
-
-        {loading && (
-          <div className="loading">
-            <div className="spinner" />
-            <span>Syncing games…</span>
-          </div>
-        )}
-
-        {isHydrating && (
-          <div className="loading">
-            <div className="spinner" />
-            <span>Enriching data...</span>
-          </div>
-        )}
-
-      </div>
-    </div>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

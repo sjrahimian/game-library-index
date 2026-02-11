@@ -31,13 +31,15 @@
 
   
   /* Custom */
+  --color-duplicate: var(--duplicate-row);
   --color-gog: hsl(var(--brand-gog-text));
   --color-gog-background: hsla(var(--brand-gog-bg));
   --color-gog-border: 1px solid hsla(var(--brand-gog-text) / 0.3);
-  --color-steam: hsl(var(--brand-steam-text));
+
+  --color-steam: var(--brand-steam);
+  --color-steam-text: hsl(var(--brand-steam-text));
   --color-steam-background: hsla(var(--brand-steam-bg));
   --color-steam-border: 1px solid hsla(var(--brand-steam-text) / 0.3);
-  --color-duplicate: var(--duplicate-row);
 
 }
 
@@ -53,20 +55,25 @@
     --card: #f9f9f9;
     --muted: #e1e1e1;
     --muted-foreground: #64748b;
-    
+    --secondary: #e630309f;
+    --secondary-foreground: #0f172a;
+
     /* Popover (Dropdowns) */
     --popover: #f1f1f1;
-    --popover-foreground: #000000;
-    --accent: #e1e1e1;
-    --accent-foreground: #000000;
+    --popover-foreground: #0f172a;
+    --accent: #dddddd;
+    --accent-foreground: #0f172a;
 
     /* Custom brand*/
-    --brand-gog-bg: 298 47% 37% / 0.15;
+    /** GOG COLOURS */
+    --duplicate-row: hsla(0, 100%, 70%, 0.20);
+    --brand-gog-bg: 298 47% 37% / 0.20;
     --brand-gog-text: 298 47% 37%;
-    --brand-steam-bg: 213 35% 15% / 0.15;
+    /** STEAM COLOURS */
+    --brand-steam: #318aea;
+    /* --brand-steam-bg: 213 35% 15% / 0.15; OLD */
+    --brand-steam-bg: 211 87% 49% / 0.20;
     --brand-steam-text: 213 35% 15%;
-    --duplicate-row: #ff64644d;
-
   }
   
   .dark {
@@ -76,32 +83,26 @@
     --card: #1c1c1c;
     --muted: #363636;
     --muted-foreground: #a1a1a1;
+    --secondary: #e630309f;
+    --secondary-foreground: #fafafa;
 
     /* Popover (Dropdowns) */
     --popover: #131313;
-    --popover-foreground: #ffffff;
+    --popover-foreground: #fafafa;
     --accent: #434343;
-    --accent-foreground: #ffffff;
+    --accent-foreground: #fafafa;
     
     /* Custom brand*/
+    /** GOG COLOURS */
+    --duplicate-row: hsla(0, 49%, 50%, 0.20);
     --brand-gog-bg: 298 90% 73% / 0.15;
     --brand-gog-text: 298 90% 85%;
+    /** STEAM COLOURS */
+    --brand-steam: #083566; 
     --brand-steam-bg: 214 95% 68% / 0.15;
     --brand-steam-text: 214 95% 75%;
-    --duplicate-row: #bf42424d;
+
   }
-}
-
-.store-badge-steam {
-  background-color: hsla(var(--brand-steam-bg)) !important;
-  color: hsl(var(--brand-steam-text)) !important;
-  border: 1px solid hsla(var(--brand-steam-text) / 0.3) !important;
-}
-
-.store-badge-gog {
-  background-color: hsla(var(--brand-gog-bg)) !important;
-  color: hsl(var(--brand-gog-text)) !important;
-  border: 1px solid hsla(var(--brand-gog-text) / 0.3) !important;
 }
 
 /* Toolbar Layout */

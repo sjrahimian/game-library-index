@@ -70,8 +70,7 @@ const [pagination, setPagination] = useState<PaginationState>({
                   {headerGroup.headers.map((header) => (
                     <TableHead 
                       key={header.id} 
-                      className="font-bold py-4 text-xs uppercase tracking-wider bg-card text-muted-foreground border-b shadow-sm"
-                      
+                      className="font-bold py-4 text-xs uppercase tracking-wider bg-card/80 text-muted-foreground border-b shadow-sm"
                     >
                       {flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
