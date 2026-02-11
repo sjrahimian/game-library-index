@@ -2,7 +2,7 @@
   "name": "game-library-index",
   "productName": "Game Library Index",
   "description": "A unified game directory that indexes your Steam and GOG libraries to uncover basic game details, OS info, and duplicate ownership.",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "keywords": [
     "electron",
     "boilerplate",
@@ -221,7 +221,7 @@
         "dmg",
         "zip"
       ],
-      "artifactName": "${name}_${version}_portable-mac.${ext}",
+      "artifactName": "${name}_${version}_mac-portable.${ext}",
       "type": "distribution",
       "hardenedRuntime": true,
       "entitlements": "assets/entitlements.mac.plist",
@@ -229,7 +229,7 @@
       "gatekeeperAssess": false
     },
     "dmg": {
-      "artifactName": "${name}_${version}_setup-mac.${ext}",
+      "artifactName": "${name}_${version}_mac-setup.${ext}",
       "contents": [
         {
           "x": 130,
@@ -252,7 +252,7 @@
           ]
         },
         {
-          "target": "portable",
+          "target": "zip",
           "arch": [
             "x64"
           ]
@@ -260,17 +260,18 @@
       ]
     },
     "nsis": {
-      "artifactName": "${name}_${version}_setup-win.${ext}",
+      "artifactName": "${name}_${version}_win-setup.${ext}",
       "oneClick": false,
       "perMachine": true,
       "allowElevation": true,
+      "disableWebInstaller": true,
       "allowToChangeInstallationDirectory": true,
       "license": "LICENSE",
       "deleteAppDataOnUninstall": true,
       "uninstallDisplayName": "${productName}"
     },
-    "portable": {
-      "artifactName": "${name}_${version}_portable-win.${ext}",
+    "zip": {
+      "artifactName": "${name}_${version}_win-portable.${ext}",
       "requestExecutionLevel": "user"
     },
     "linux": {
@@ -279,7 +280,7 @@
         "tar.gz"
       ],
       "category": "Utility",
-      "artifactName": "${name}_${version}_portable-nix.${ext}",
+      "artifactName": "${name}_${version}_linux.${ext}",
       "desktop": {
         "entry": {
           "GenericName": "Game Library Index",

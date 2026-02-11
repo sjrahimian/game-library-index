@@ -151,7 +151,8 @@ app.whenReady().then(async () => {
 
 
 ipcMain.on('restart-app', () => {
-  autoUpdater.quitAndInstall();
+  // passing (isSilent, isForceRunAfter)
+  autoUpdater.quitAndInstall(true, true);
 });
   
 // ************************************ \\
