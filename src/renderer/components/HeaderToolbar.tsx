@@ -40,80 +40,80 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
   return (
     <Card className="flex flex-col md:flex-row items-center justify-between p-4 mb-6 gap-4 shadow-sm border-border">
       <ThemeToggle />
-    {/* Left section: search bar */}
-    <div className="flex items-center gap-3 w-full md:basis-1/2">
-    {/* Container for the floating logic */}
-      <div className="relative w-full max-w-[350px] group">
-        <Input
-          id="search-input"
-          placeholder=" "
-          value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
-          className="peer pl-9 bg-background h-11 pt-4 
-          /* Focus styles for the blue glow */
+      {/* Left section: search bar */}
+      <div className="flex items-center gap-3 w-full md:basis-1/2">
+      {/* Container for the floating logic */}
+        <div className="relative w-full max-w-[350px] group">
+          <Input
+            id="search-input"
+            placeholder=" "
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
+            className="peer pl-9 bg-background h-11 pt-4 
+            /* Focus styles for the blue glow */
 
-          transition-shadow duration-200"
-        />
-        
-        {/* search icon */}
-        <div className="absolute left-2.5 top-1/2 -translate-y-1/2">
-          <Search className="h-4 w-4 text-muted-foreground" />
+            transition-shadow duration-200"
+          />
+          
+          {/* search icon */}
+          <div className="absolute left-2.5 top-1/2 -translate-y-1/2">
+            <Search className="h-4 w-4 text-muted-foreground" />
+          </div>
+
+          {/* The floating label */}
+          <label
+            htmlFor="search-input"
+            className="absolute left-9 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none transition-all duration-200 
+              peer-focus:top-2 peer-focus:text-[10px] peer-focus:text-primary
+              peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-[10px]"
+          >
+            { "Search library..."}
+          </label>
         </div>
-
-        {/* The floating label */}
-        <label
-          htmlFor="search-input"
-          className="absolute left-9 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none transition-all duration-200 
-            peer-focus:top-2 peer-focus:text-[10px] peer-focus:text-primary
-            peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-[10px]"
-        >
-          { "Search library..."}
-        </label>
       </div>
-    </div>
 
-    {/* 2. Middle section*/}
-    <div className="flex items-center justify-center gap-3 flex-nowrap">
-      {/* Stats badges in the same row */}
-      <div className="flex items-center gap-2">
-        {stats.gog > 0 && (
-          <Badge variant="gog" className="py-1.5 px-3 shrink-0">
-            {stats.gog}
-            <img src={gogDark} alt="GOG Logo" className="w-4 h-4 ml-2 dark:hidden" />
-            <img src={gogLight} alt="GOG Logo" className="w-4 h-4 ml-2 hidden dark:block" />
+      {/* 2. Middle section*/}
+      <div className="flex items-center justify-center gap-3 flex-nowrap">
+        {/* Stats badges in the same row */}
+        <div className="flex items-center gap-2">
+          {stats.gog > 0 && (
+            <Badge variant="gog" className="py-1.5 px-3 shrink-0">
+              {stats.gog}
+              <img src={gogDark} alt="GOG Logo" className="w-4 h-4 ml-2 dark:hidden" />
+              <img src={gogLight} alt="GOG Logo" className="w-4 h-4 ml-2 hidden dark:block" />
+            </Badge>
+          )}
+          {stats.steam > 0 && (
+            <Badge variant="steam" className="py-1.5 px-3 shrink-0">
+              {stats.steam}
+              <img src={steamLogo} alt="Steam" className="w-4 h-4 ml-2" />
+            </Badge>
+          )}
+
+          <Badge variant="default" className="bg-accent hover:bg-accent/60 py-1.5 px-3 shrink-0">
+              {stats.total}
+              <Disc3 data-icon="inline-start" className="w-4 h-4 ml-1" />
           </Badge>
-        )}
-        {stats.steam > 0 && (
-          <Badge variant="steam" className="py-1.5 px-3 shrink-0">
-            {stats.steam}
-            <img src={steamLogo} alt="Steam" className="dark:invert" className="w-4 h-4 ml-2" />
-          </Badge>
-        )}
 
-        <Badge variant="default" className="bg-accent hover:bg-accent/60 py-1.5 px-3 shrink-0">
-            {stats.total}
-            <Disc3 data-icon="inline-start" className="w-4 h-4 ml-1" />
-        </Badge>
+          {stats.duplicates > 0 && (
+            <Badge variant="destructive" className="bg-duplicate hover:bg-duplicate/80 py-1.5 px-3 shrink-0 ">
+              {stats.duplicates}
+              <Layers2 data-icon="inline-start" className="w-4 h-4 ml-1" />
+            </Badge>
+          )}
 
-        {stats.duplicates > 0 && (
-          <Badge variant="destructive" className="bg-duplicate hover:bg-duplicate/80 py-1.5 px-3 shrink-0 ">
-            {stats.duplicates}
-            <Layers2 data-icon="inline-start" className="w-4 h-4 ml-1" />
-          </Badge>
+        {/* Hydrating indicator */}
+        {isHydrating && (
+            <div className="flex items-center gap-2 text-xs font-medium text-blue-500 animate-pulse shrink-0 border-l pl-2 ml-2">
+            <RefreshCw className="w-4 h-4 animate-spin" />
+            <span>Enriching...</span>
+          </div>
         )}
-
-      {/* Hydrating indicator */}
-      {isHydrating && (
-          <div className="flex items-center gap-2 text-xs font-medium text-blue-500 animate-pulse shrink-0 border-l pl-2 ml-2">
-          <RefreshCw className="w-4 h-4 animate-spin" />
-          <span>Enriching...</span>
         </div>
-      )}
       </div>
-    </div>
 
-    {/* Right section: dropdown */}
-    <div className="w-full md:basis-1/4 flex justify-end">
+      {/* Right section: dropdown */}
+      <div className="w-full md:basis-1/4 flex justify-end">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="gap-2">

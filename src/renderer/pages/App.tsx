@@ -8,12 +8,9 @@ import SteamSyncModal from '../components/SteamSyncModal';
 import { GameDataTable } from "../components/GameDataTable";
 import { columns } from "../components/table/columns";
 import { HeaderToolbar } from "../components/HeaderToolbar"; // Import the new component
+import { CurrentTheme } from "../hooks/CurrentTheme";
 import "../assets/css/App.css"
 import "../assets/css/dist.css"
-
-import gogLight from '../assets/icons/gog-light.svg';
-import gogDark from '../assets/icons/gog-light.svg';
-import steam from '../assets/icons/steam-logo.svg';
 
 const UpdateToast = () => (
   <div>
@@ -34,8 +31,8 @@ const UpdateToast = () => (
     </button>
   </div>
 );
-
 export default function App() {
+  const theme = CurrentTheme();
   const [globalFilter, setGlobalFilter] = useState("");
   const [showImport, setShowImport] = useState(false);
   const [showSteamImport, setShowSteamImport] = useState(false);
@@ -128,7 +125,7 @@ export default function App() {
         <ToastContainer 
           position="top-left"
           autoClose={3000}
-          theme="dark" // Matches your app's dark theme
+          theme={ theme }
         />
       </div>
     </div>

@@ -105,87 +105,16 @@
   }
 }
 
-/* Toolbar Layout */
-.toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    margin-bottom: 10px;
-    background: #d2d2d2;
-    border-radius: 20px;
-  }
-  
-  .button-group {
-    display: flex;
-    gap: 12px;
-  }
-  
-  /* Specific Sync Button Colors */
-  .btn-steam {
-    background-color: #1b2838;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-  
-  .btn-gog {
-    background-color: #86328a;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-  
-  /* Counter Badges on the Far Right */
-  .stats-container {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .stat-badge {
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-  
-  .stat-gog { background-color: #86328a; color: white; }
-  .stat-steam { background-color: #1b2838; color: white; }
-  .stat-total { background-color: #445f64; color: white; }
-  .stat-dupe { background-color: #fcdcdc; color: #d32f2f; }
-  
-  /* For hydration */
-  .hydrating-dot {
-    width: 8px;
-    height: 8px;
-    background-color: #a8e4a0;
-    border-radius: 50%;
-    display: inline-block;
-    margin-left: 10px;
-    animation: pulse 2s infinite;
-  }
-  
-  @keyframes pulse {
-    0% { opacity: 0.5; }
-    50% { opacity: 1; }
-    100% { opacity: 0.5; }
-  }
+/* Target the main toast container and individual toast items */
+.Toastify__toast {
+  border-radius: 0px !important;
+}
 
-  .stat-hydrate { color: #a8e4a0; }
+/* Make the progress bar bottom corners are also square */
+.Toastify__progress-bar {
+  border-bottom-left-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
 
   /* Progress Bar Background */
 /* .Toastify__progress-bar--info { */

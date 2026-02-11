@@ -22,8 +22,7 @@ type Props = {
 
 export default function SteamSyncModal({ onClose }: Props) {
   const [loading, setLoading] = useState<boolean>(false);
-  // const { isHydrating } = useHydration();
-  const isHydrating = true;
+  const { isHydrating } = useHydration();
   const [apiKey, setApiKey] = useState('');
   const [steamId, setSteamId] = useState('');
 
