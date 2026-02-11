@@ -90,13 +90,13 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
           </Badge>
         )}
 
-        <Badge variant="outline" className="hover:bg-[#f0f0f0] dark:hover:bg-[#2c2c2c] py-1.5 px-3 border-slate-500 shrink-0">
+        <Badge variant="default" className="bg-accent hover:bg-accent/60 py-1.5 px-3 shrink-0">
             {stats.total}
             <Disc3 data-icon="inline-start" className="w-4 h-4 ml-1" />
         </Badge>
 
         {stats.duplicates > 0 && (
-          <Badge variant="destructive" className="bg-[#f755554d] hover:bg-[#f7555566] py-1.5 px-3 shrink-0 ">
+          <Badge variant="destructive" className="bg-duplicate hover:bg-duplicate/80 py-1.5 px-3 shrink-0 ">
             {stats.duplicates}
             <Layers2 data-icon="inline-start" className="w-4 h-4 ml-1" />
           </Badge>

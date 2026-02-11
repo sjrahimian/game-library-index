@@ -19,7 +19,6 @@
     --color-green-800: oklch(44.8% 0.119 151.328);
     --color-blue-500: oklch(62.3% 0.214 259.815);
     --color-slate-400: oklch(70.4% 0.04 256.788);
-    --color-slate-500: oklch(55.4% 0.046 257.417);
     --color-white: #fff;
     --spacing: 0.25rem;
     --container-xs: 20rem;
@@ -69,10 +68,9 @@
     --color-ring: var(--ring);
     --color-gog: hsl(var(--brand-gog-text));
     --color-gog-background: hsla(var(--brand-gog-bg));
-    --color-gog-border: 1px solid hsla(var(--brand-gog-text) / 0.3);
     --color-steam: hsl(var(--brand-steam-text));
     --color-steam-background: hsla(var(--brand-steam-bg));
-    --color-steam-border: 1px solid hsla(var(--brand-steam-text) / 0.3);
+    --color-duplicate: var(--duplicate-row);
   }
 }
 @layer base {
@@ -593,9 +591,6 @@
   .border-border {
     border-color: var(--color-border);
   }
-  .border-gog-border {
-    border-color: var(--color-gog-border);
-  }
   .border-green-300 {
     border-color: var(--color-green-300);
   }
@@ -605,20 +600,14 @@
   .border-red-300 {
     border-color: var(--color-red-300);
   }
-  .border-slate-500 {
-    border-color: var(--color-slate-500);
-  }
-  .border-steam-border {
-    border-color: var(--color-steam-border);
-  }
   .border-transparent {
     border-color: transparent;
   }
   .border-yellow-700 {
     border-color: var(--color-yellow-700);
   }
-  .bg-\[\#f755554d\] {
-    background-color: #f755554d;
+  .bg-accent {
+    background-color: var(--color-accent);
   }
   .bg-background {
     background-color: var(--color-background);
@@ -631,6 +620,9 @@
   }
   .bg-destructive {
     background-color: var(--color-destructive);
+  }
+  .bg-duplicate {
+    background-color: var(--color-duplicate);
   }
   .bg-gog-background {
     background-color: var(--color-gog-background);
@@ -970,24 +962,20 @@
       color: var(--color-muted-foreground);
     }
   }
-  .hover\:bg-\[\#f0f0f0\] {
-    &:hover {
-      @media (hover: hover) {
-        background-color: #f0f0f0;
-      }
-    }
-  }
-  .hover\:bg-\[\#f7555566\] {
-    &:hover {
-      @media (hover: hover) {
-        background-color: #f7555566;
-      }
-    }
-  }
   .hover\:bg-accent {
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-accent);
+      }
+    }
+  }
+  .hover\:bg-accent\/60 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-accent);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--color-accent) 60%, transparent);
+        }
       }
     }
   }
@@ -1007,6 +995,16 @@
         background-color: var(--color-destructive);
         @supports (color: color-mix(in lab, red, red)) {
           background-color: color-mix(in oklab, var(--color-destructive) 90%, transparent);
+        }
+      }
+    }
+  }
+  .hover\:bg-duplicate\/80 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-duplicate);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--color-duplicate) 80%, transparent);
         }
       }
     }
@@ -1252,15 +1250,6 @@
       filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
     }
   }
-  .dark\:hover\:bg-\[\#2c2c2c\] {
-    &:where(.dark, .dark *) {
-      &:hover {
-        @media (hover: hover) {
-          background-color: #2c2c2c;
-        }
-      }
-    }
-  }
   .\[\&_svg\]\:pointer-events-none {
     & svg {
       pointer-events: none;
@@ -1324,6 +1313,7 @@
     --brand-gog-text: 298 47% 37%;
     --brand-steam-bg: 213 35% 15% / 0.15;
     --brand-steam-text: 213 35% 15%;
+    --duplicate-row: #ff64644d;
   }
   .dark {
     --background: #131313;
@@ -1337,6 +1327,7 @@
     --brand-gog-text: 298 90% 85%;
     --brand-steam-bg: 214 95% 68% / 0.15;
     --brand-steam-text: 214 95% 75%;
+    --duplicate-row: #bf42424d;
   }
 }
 .store-badge-steam {

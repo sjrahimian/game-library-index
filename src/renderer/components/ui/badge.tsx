@@ -17,9 +17,9 @@ const badgeVariants = cva(
         outline: "text-foreground",
         // --- CUSTOM VARIANTS HERE ---
         gog: 
-          "border-transparent bg-gog-background border-gog-border text-gog hover:bg-gog-background/60",
+          "border-transparent bg-gog-background text-gog hover:bg-gog-background/60",
         steam: 
-          "border-transparent bg-steam-background border-steam-border text-steam hover:bg-steam-background/60",
+          "border-transparent bg-steam-background text-steam hover:bg-steam-background/60",
       },
     },
     defaultVariants: {

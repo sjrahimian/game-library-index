@@ -62,13 +62,16 @@ const [pagination, setPagination] = useState<PaginationState>({
       <div className="rounded-md border bg-card text-card-foreground shadow flex flex-col h-[550px]">
         <div className="relative flex-1 overflow-auto"> 
           <Table className="border-separate border-spacing-0">
+
+            {/* Sticky header */}
             <TableHeader className="bg-muted/50 sticky top-0 z-20">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}> 
                   {headerGroup.headers.map((header) => (
                     <TableHead 
                       key={header.id} 
-                      className="font-bold py-4 text-xs uppercase tracking-wider bg-muted text-muted-foreground border-b shadow-sm"
+                      className="font-bold py-4 text-xs uppercase tracking-wider bg-card text-muted-foreground border-b shadow-sm"
+                      
                     >
                       {flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
@@ -76,11 +79,13 @@ const [pagination, setPagination] = useState<PaginationState>({
                 </TableRow>
               ))}
             </TableHeader>
+
+            {/* Body content */}
             <TableBody>
                 {table.getRowModel().rows.map((row) => (
                 <TableRow 
                     key={row.id} 
-                    className={(row.original as any).duplicate ? "bg-muted/50" : ""}
+                    className={(row.original as any).duplicate ? "bg-duplicate hover:bg-duplicate/80" : ""}
                 >
                     {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

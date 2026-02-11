@@ -30,16 +30,15 @@
 
 
   
-  /* Direct mapping for Hex */
-  /* --color-gog: var(--brand-gog);
-  --color-gog-background: var(--brand-gog-background); */
+  /* Custom */
   --color-gog: hsl(var(--brand-gog-text));
   --color-gog-background: hsla(var(--brand-gog-bg));
   --color-gog-border: 1px solid hsla(var(--brand-gog-text) / 0.3);
   --color-steam: hsl(var(--brand-steam-text));
   --color-steam-background: hsla(var(--brand-steam-bg));
   --color-steam-border: 1px solid hsla(var(--brand-steam-text) / 0.3);
-  
+  --color-duplicate: var(--duplicate-row);
+
 }
 
 
@@ -58,11 +57,13 @@
     --accent: #e4e4e4;
     --accent-foreground: #131313;
 
-    /* Custom Brand Variables in Hex */
+    /* Custom brand*/
     --brand-gog-bg: 298 47% 37% / 0.15;
     --brand-gog-text: 298 47% 37%;
     --brand-steam-bg: 213 35% 15% / 0.15;
     --brand-steam-text: 213 35% 15%;
+    --duplicate-row: #ff64644d; /* Very light amber */
+
   }
   
   .dark {
@@ -70,22 +71,18 @@
     --foreground: #d1d1d1;
     --border: #d1d1d1;
 
-    /* Dark Mode Popover Logic - Fixed the inversion here */
+    /* Popover (Dropdowns) */
     --popover: #131313;
     --popover-foreground: #d1d1d1;
     --accent: #283750;
     --accent-foreground: #f8fafc;
     
-    /* Custom Brand (Dark Mode) */
-    /* --brand-gog: #c084fc;
-    --brand-gog-background: rgba(134, 50, 138, 0.50);
-    --brand-steam: #93c5fd;
-    --brand-steam-background: #61a6fa26; 
-    --brand-steam-border: 1px solid #93c5fd; */
+    /* Custom brand*/
     --brand-gog-bg: 298 90% 73% / 0.15;
     --brand-gog-text: 298 90% 85%;
     --brand-steam-bg: 214 95% 68% / 0.15;
     --brand-steam-text: 214 95% 75%;
+    --duplicate-row: #bf42424d; /* Deep dark gold */
   }
 }
 
