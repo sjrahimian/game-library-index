@@ -14,9 +14,12 @@ You will need to login into your GOG account (uses the unofficial APIs) to grab 
 
 ### Steam
 
-You will need to register for a [Steam Web API Key](https://steamcommunity.com/dev/apikey), after which you can pull your games library.
+You will need:
 
-_Nb._ Game Library Index **will not** save your API key; the key will have to be provided each time a sync with the Steam library is attempted.
+1. Steam Web API Key
+2. Your 17-digit SteamID (a.k.a. *SteamID64*)
+
+Register for a [Steam Web API Key here](https://steamcommunity.com/dev/apikey), and the SteamID64 can be found in your profile URL (e.g., `steamcommunity.com/profiles/1234567890#######`). _Nb._ Game Library Index **will not** save the API key or SteamID64; the key and ID will have to be provided each time a sync with the Steam library is attempted.
 
 ## Setup
 
