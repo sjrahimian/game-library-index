@@ -2,7 +2,7 @@
   "name": "game-library-index",
   "productName": "Game Library Index",
   "description": "A unified game directory that indexes your Steam and GOG libraries to uncover basic game details, OS info, and duplicate ownership.",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "keywords": [
     "electron",
     "boilerplate",
@@ -13,7 +13,8 @@
     "webpack",
     "library",
     "tracker",
-    "organizer",
+    "index",
+    "scout",
     "video game",
     "game",
     "gog",
