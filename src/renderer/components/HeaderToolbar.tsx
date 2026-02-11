@@ -34,7 +34,8 @@ interface HeaderToolbarProps {
 }
 
 export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, onSearchChange }: HeaderToolbarProps) {
-  const { isHydrating } = useHydration();
+  // const { isHydrating } = useHydration();
+  const isHydrating  = true;
   const uniqueCount = stats.total - stats.duplicates;
   
   return (

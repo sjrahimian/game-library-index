@@ -47,42 +47,48 @@
 /* App.css */
 @layer base {
   :root {
-    --background: #f8fafc;
     --foreground: #131313;
+    --background: #f1f1f1;
     --border: #131313;
+    --card: #f9f9f9;
+    --muted: #e1e1e1;
+    --muted-foreground: #64748b;
     
     /* Popover (Dropdowns) */
-    --popover: #ffffff;
-    --popover-foreground: #0f172a;
-    --accent: #e4e4e4;
-    --accent-foreground: #131313;
+    --popover: #f1f1f1;
+    --popover-foreground: #000000;
+    --accent: #e1e1e1;
+    --accent-foreground: #000000;
 
     /* Custom brand*/
     --brand-gog-bg: 298 47% 37% / 0.15;
     --brand-gog-text: 298 47% 37%;
     --brand-steam-bg: 213 35% 15% / 0.15;
     --brand-steam-text: 213 35% 15%;
-    --duplicate-row: #ff64644d; /* Very light amber */
+    --duplicate-row: #ff64644d;
 
   }
   
   .dark {
-    --background: #131313;
     --foreground: #d1d1d1;
+    --background: #131313;
     --border: #d1d1d1;
+    --card: #1c1c1c;
+    --muted: #363636;
+    --muted-foreground: #a1a1a1;
 
     /* Popover (Dropdowns) */
     --popover: #131313;
-    --popover-foreground: #d1d1d1;
-    --accent: #283750;
-    --accent-foreground: #f8fafc;
+    --popover-foreground: #ffffff;
+    --accent: #434343;
+    --accent-foreground: #ffffff;
     
     /* Custom brand*/
     --brand-gog-bg: 298 90% 73% / 0.15;
     --brand-gog-text: 298 90% 85%;
     --brand-steam-bg: 214 95% 68% / 0.15;
     --brand-steam-text: 214 95% 75%;
-    --duplicate-row: #bf42424d; /* Deep dark gold */
+    --duplicate-row: #bf42424d;
   }
 }
 
