@@ -3,8 +3,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Local libraries
-import GOGImportModal from '../components/GOGImportModal';
-import SteamSyncModal from '../components/SteamSyncModal';
+import GOGImportModal from '../components/ModalGogImport';
+import SteamSyncModal from '../components/ModalSteamSync';
 import { GameDataTable } from "../components/GameDataTable";
 import { columns } from "../components/table/columns";
 import { HeaderToolbar } from "../components/HeaderToolbar"; // Import the new component
@@ -99,7 +99,7 @@ export default function App() {
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-8">
-      {/* Header with search and sync buttons */}
+      {/* Header with search input, actions, & stats */}
       <HeaderToolbar 
         stats={stats}
         searchQuery={globalFilter}
