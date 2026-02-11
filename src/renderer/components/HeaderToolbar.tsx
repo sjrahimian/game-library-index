@@ -57,7 +57,7 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
         
         {/* search icon */}
         <div className="absolute left-2.5 top-1/2 -translate-y-1/2">
-        <Search className="h-4 w-4 text-muted-foreground" />
+          <Search className="h-4 w-4 text-muted-foreground" />
         </div>
 
         {/* The floating label */}
@@ -79,7 +79,7 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
         {stats.gog > 0 && (
           <Badge variant="gog" className="py-1.5 px-3 shrink-0">
             {stats.gog}
-            <img src={gogDark} alt="GOG Logo" className="w-5 h-4 ml-2 dark:hidden" />
+            <img src={gogDark} alt="GOG Logo" className="w-4 h-4 ml-2 dark:hidden" />
             <img src={gogLight} alt="GOG Logo" className="w-4 h-4 ml-2 hidden dark:block" />
           </Badge>
         )}
@@ -129,8 +129,8 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-border" />
             <DropdownMenuItem onClick={onImportSteam} className="cursor-pointer focus:bg-accent focus:text-accent-foreground">
-              <div className={`flex items-center gap-2 text-xs font-medium ${isHydrating ? "text-blue-500 animate-pulse" :  "text-[#1b2838] dark:text-slate-400"}`}>
-                <RefreshCw className={`w-4 h-4 mr-2 ${isHydrating ? "text-blue-500 animate-spin" : "text-[#1b2838] dark:text-slate-400"}`} />
+              <div className={`flex items-center gap-2 text-xs font-medium ${isHydrating ? "text-blue-500 animate-pulse" :  ""}`}>
+                <RefreshCw className={`w-4 h-4 mr-2 ${isHydrating ? "text-blue-500 animate-spin" : ""}`} />
               </div>
               Import Steam
             </DropdownMenuItem>
