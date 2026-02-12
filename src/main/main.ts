@@ -20,6 +20,18 @@ import { getGames, setupStatsHandlers } from './ipc/database';
 import { clearGogCookies, syncGogLibraryAndDB, syncSteamLibraryAndDB, syncSteamLibraryAndDBUnofficial } from './ipc/gamestore';
 
 
+// init logger
+function loggerInit() {
+  log.initialize();
+  Object.assign(console, log.functions);
+  log.errorHandler.startCatching();
+  log.transports.file.archiveLogFn(log.transports.file.getFile().path);
+  console.log("--- Application Starting ---");
+  console.log(`Log file: ${log.transports.file.getFile().path}`);
+}
+
+loggerInit();
+
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -140,14 +152,13 @@ app.on('window-all-closed', () => {
 });
 
 app.whenReady().then(async () => {
-    createWindow();
-    app.on('activate', () => {
-      // On macOS it's common to re-create a window in the app when the
-      // dock icon is clicked and there are no other windows open.
-      if (mainWindow === null) createWindow();
-    });
-  })
-  .catch(console.log);
+  createWindow();
+  app.on('activate', () => {
+    // On macOS it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (mainWindow === null) createWindow();
+  });
+}).catch(console.log);
 
 
 ipcMain.on('restart-app', () => {

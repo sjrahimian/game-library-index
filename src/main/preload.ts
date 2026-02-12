@@ -36,6 +36,8 @@ contextBridge.exposeInMainWorld('api', {
   
   getGames: () => ipcRenderer.invoke('get-games'),
   getLibraryStats: () => ipcRenderer.invoke('get-stats'),
+
+  // --- Fetch game library ---
   syncGog: () => ipcRenderer.invoke('sync:gog'),
   clearGog: () => ipcRenderer.invoke('clear:gog'),
   syncSteam: (apiKey: string, steamId: string) => ipcRenderer.invoke('sync:steam', apiKey, steamId),
