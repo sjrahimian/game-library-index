@@ -193,16 +193,15 @@ export async function hydrateSteamGames(event: Electron.IpcMainInvokeEvent) {
         // Update the games table
         const genre = details.genres ? details.genres[0]?.description : 'Unknown';
         const newDate = formatSteamDate(details.release_date?.date || null);
-        await db.update(games)
-          .set({
-            category: genre,
-            releaseDate: newDate,
-          }).where(eq(games.id, game.id));
+        await db.update(games).set({
+          category: genre,
+          releaseDate: newDate,
+        }).where(eq(games.id, game.id));
 
         // Update the store_entries table
-        await db.update(store_entries)
-          .set({ osSupported: normalizeOSData(details.platforms), })
-          .where(eq(store_entries.gameId, game.id));
+        await db.update(store_entries).set({ 
+          osSupported: normalizeOSData(details.platforms), 
+        }).where(eq(store_entries.gameId, game.id));
 
           
         // IMPORTANT: Tell the frontend this specific game is ready
@@ -218,8 +217,19 @@ export async function hydrateSteamGames(event: Electron.IpcMainInvokeEvent) {
         console.debug(`Hydrated: ${details.name}`);
       } else {
         const msg = `No Steam store page for: ${game.title} (${game.appId})`;
+        await db.update(games).set({
+          category: "N/A", 
+          releaseDate: "N/A",
+        }).where(eq(games.id, game.id));
+
+        // Update the store_entries table
+        await db.update(store_entries).set({ 
+          osSupported: normalizeOSData({ windows: false, mac: false, linux: false }), 
+        }).where(eq(store_entries.gameId, game.id));
+
         console.warn(msg)
-        event.sender.send('game-hydrated', {success: data[game.appId]?.success, msg: msg})
+        event.sender.send('game-hydrated', {success: data[game.appId]?.success, msg: msg});
+        
       }
 
     } catch (error) {

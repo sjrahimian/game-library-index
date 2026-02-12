@@ -90,7 +90,6 @@ export function syncSteamLibraryAndDBUnofficial() {
     console.log('Starting Steam library sync using unofficial API...');
 
     const rawData = await fetchSteamLibraryUnofficial(steamId);
-    console.log(">>>>>>>>>>DATA RETURNED: ", rawData.length)
     
     console.info('...Steam library sync completed.');
   });
