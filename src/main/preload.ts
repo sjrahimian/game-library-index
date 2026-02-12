@@ -39,7 +39,6 @@ contextBridge.exposeInMainWorld('api', {
   syncGog: () => ipcRenderer.invoke('sync:gog'),
   clearGog: () => ipcRenderer.invoke('clear:gog'),
   syncSteam: (apiKey: string, steamId: string) => ipcRenderer.invoke('sync:steam', apiKey, steamId),
-  syncSteamUnofficial: (steamId: string) => ipcRenderer.invoke('sync:steamNoApi', steamId),
   onSyncComplete: (callback) => {
     // When 'sync-complete' arrives, run the callback provided by the frontend
     const subscription = (_event: any, ...args: any[]) => callback(...args);

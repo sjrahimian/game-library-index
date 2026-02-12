@@ -17,7 +17,7 @@ import { resolveHtmlPath } from './util';
 
 // Local libraries
 import { getGames, getStats } from './ipc/database';
-import { clearGogCookies, syncGogLibraryAndDB, syncSteamLibraryAndDB, syncSteamLibraryAndDBUnofficial } from './ipc/gamestore';
+import { clearGogCookies, syncGogLibraryAndDB, syncSteamLibraryAndDB } from './ipc/gamestore';
 
 
 // init logger
@@ -171,7 +171,6 @@ ipcMain.on('restart-app', () => {
 clearGogCookies();
 syncGogLibraryAndDB();
 syncSteamLibraryAndDB();
-syncSteamLibraryAndDBUnofficial();
 
 // ************************* \\
 // IPC handler to get all games
