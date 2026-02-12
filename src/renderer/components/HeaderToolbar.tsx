@@ -10,7 +10,7 @@ import {
     DropdownMenuTrigger,
     DropdownMenuSeparator 
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Layers2, Plus, RefreshCw, Search, Settings, Disc3 } from "lucide-react";
+import { ChevronDown, Layers2, Plus, RefreshCw, Search, Settings, Disc3, Dices } from "lucide-react";
 
 import { useHydration } from '../hooks/HydrationContext';
 
@@ -33,9 +33,10 @@ interface HeaderToolbarProps {
   onSearchChange: (value: string) => void;
   showDuplicatesOnly: boolean;
   setShowDuplicatesOnly: (val: boolean) => void;
+  onSurpriseMe: () => void;
 }
 
-export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, onSearchChange, showDuplicatesOnly, setShowDuplicatesOnly }: HeaderToolbarProps) {
+export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, onSearchChange, showDuplicatesOnly, setShowDuplicatesOnly, onSurpriseMe }: HeaderToolbarProps) {
   const { isHydrating } = useHydration();
   const uniqueCount = stats.total - stats.duplicates;
   
@@ -139,6 +140,10 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
             <DropdownMenuItem onClick={() => setShowDuplicatesOnly(!showDuplicatesOnly)} className="cursor-pointer focus:bg-accent focus:text-accent-foreground">
               <Layers2 className={`w-4 h-4 mr-2 ${showDuplicatesOnly ? "text-destructive" : ""}`} />
               {showDuplicatesOnly ? "Show All Games" : "Show Duplicates Only"}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onSurpriseMe} className="cursor-pointer focus:bg-accent focus:text-accent-foreground">
+              <Dices className="w-4 h-4 mr-2" />
+              Pick a Random Game
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

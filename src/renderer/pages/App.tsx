@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast, ToastContainer, ToastIcon } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Local libraries
@@ -11,6 +11,7 @@ import { HeaderToolbar } from "../components/HeaderToolbar"; // Import the new c
 import { CurrentTheme } from "../hooks/CurrentTheme";
 import "../assets/css/App.css"
 import "../assets/css/dist.css"
+import { Gamepad2 } from 'lucide-react';
 
 const UpdateToast = () => (
   <div style={{ display: 'inline-flex', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -169,6 +170,31 @@ export default function App() {
     ? rowData.filter((game: any) => game.duplicate === true || game.duplicate === 1)
     : rowData;
 
+  const handleSurpriseMe = () => {
+    if (filteredRowData.length === 0) {
+      toast.warn("No games found in the current view!");
+      return;
+    }
+
+    // Pick a random game from the ALREADY filtered/sorted list
+    const randomIndex = Math.floor(Math.random() * filteredRowData.length);
+    const selectedGame = filteredRowData[randomIndex];
+
+    // Notify the user
+    toast.info(`Why not play: ${selectedGame.title}?`, {
+      position: "top-center",
+      autoClose: 5000,
+      icon: <Gamepad2 className="text-blue-500" />,
+      className: "border-2 border-primary border-blue-500",
+    });
+
+    // OPTIONAL: If you want the table to jump to that game, 
+    // you would need to calculate the page index and set it:
+    // const pageSize = 20; 
+    // const pageIndex = Math.floor(randomIndex / pageSize);
+    // table.setPageIndex(pageIndex); 
+  };
+
   return (
     <div className="mx-auto max-w-5xl px-6 py-8">
       
@@ -190,6 +216,7 @@ export default function App() {
         onImportSteam={() => setShowSteamImport(true)}
         showDuplicatesOnly={showDuplicatesOnly}
         setShowDuplicatesOnly={setShowDuplicatesOnly}
+        onSurpriseMe={handleSurpriseMe}
       />
 
       {/** Table that shows games */}
