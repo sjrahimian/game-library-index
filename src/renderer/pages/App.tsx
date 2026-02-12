@@ -47,15 +47,23 @@ export default function App() {
 
   // Fetch & refresh game data for table
   useEffect(() => {
-    window.api.getGames().then(setRowData);
+    const loadGames = () => {
+      window.api.getGames().then((data: any[]) => {
+        // Ensure the array is sorted before it ever touches the state
+        const sorted = [...data].sort((a, b) => 
+          (a.normalizedTitle || "").localeCompare(b.normalizedTitle || "")
+        );
+        setRowData(sorted);
+      });
+    };
+  
+    loadGames();
     
     // Listen for a 'sync-complete' event from main to auto-refresh
-    const unsubscribe = window.api.onSyncComplete(() => {
-      window.api.getGames().then(setRowData);
-    });
+    const unsubscribe = window.api.onSyncComplete(loadGames);
 
     return () => unsubscribe();
-
+    
   }, []);
 
   // Listener for when a specific game finishes hydrating
@@ -70,8 +78,8 @@ export default function App() {
       }
   
       // 2. Update the local rowData state
-      setRowData(prevRows => {
-        return prevRows.map(row => {
+      setRowData(prevRows => {  
+        const updated = prevRows.map(row => {
           // Find the specific row that was just hydrated
           if (row.id === data.gameId) {
             const currentStores = row.stores || [];
@@ -89,6 +97,8 @@ export default function App() {
           }
           return row;
         });
+
+        return [...updated].sort((a, b) => a.title.localeCompare(b.title));
       });
     };
   

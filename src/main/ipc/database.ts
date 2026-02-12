@@ -10,7 +10,7 @@ export function getGames() {
     ipcMain.handle('get-games', async () => {
 
     try {
-        // 1. Fetch all games and their associated store entries using a join
+        // Fetch all games and their associated store entries using a join
         const rows = await db
         .select({
             id: games.id,
@@ -25,9 +25,10 @@ export function getGames() {
         })
         .from(games)
         .leftJoin(store_entries, eq(games.id, store_entries.gameId))
+        .orderBy(sql`${games.normalizedTitle} COLLATE NOCASE ASC`)
         .all();
 
-        // 2. Group the results by game ID
+        // Group the results by game ID
         // Since a JOIN returns one row per store entry, we group them back into a single game object
         const library = rows.reduce((acc, row) => {
         const gameId = row.id;
@@ -36,6 +37,7 @@ export function getGames() {
             acc[gameId] = {
             id: row.id,
             title: row.title,
+            normalizedTitle: row.normalizedTitle,
             slug: row.slug,
             category: row.category,
             releaseDate: row.releaseDate,
@@ -53,7 +55,7 @@ export function getGames() {
             });
         }
 
-        // 3. Mark as duplicate if the game is owned in more than one store
+        // Mark as duplicate if the game is owned in more than one store
         acc[gameId].duplicate = acc[gameId].stores.length > 1;
 
         return acc;
@@ -224,7 +226,7 @@ export async function hydrateSteamGames(event: Electron.IpcMainInvokeEvent) {
 
         // Update the store_entries table
         await db.update(store_entries).set({ 
-          osSupported: normalizeOSData({ windows: false, mac: false, linux: false }), 
+          osSupported: normalizeOSData({ windows: true, mac: false, linux: false }), 
         }).where(eq(store_entries.gameId, game.id));
 
         console.warn(msg)
@@ -232,7 +234,7 @@ export async function hydrateSteamGames(event: Electron.IpcMainInvokeEvent) {
           success: data[game.appId]?.success,
           gameId: game.id, 
           appId: game.appId,
-          os: normalizeOSData({ windows: false, mac: false, linux: false }),
+          os: normalizeOSData({ windows: true, mac: false, linux: false }),
           category: "N/A",
           releaseDate: "N/A",
           msg: msg
