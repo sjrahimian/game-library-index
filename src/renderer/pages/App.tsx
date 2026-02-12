@@ -43,6 +43,7 @@ export default function App() {
   const [showSteamImport, setShowSteamImport] = useState(false);
   const [stats, setStats] = useState({ steam: 0, gog: 0, total: 0, duplicates: 0 });
   const [rowData, setRowData] = useState([]);
+  const [showDuplicatesOnly, setShowDuplicatesOnly] = useState(false); // Add this
 
   // Fetch & refresh game data for table
   useEffect(() => {
@@ -153,6 +154,11 @@ export default function App() {
     return window.api.onSyncComplete(refreshStats);
   }, []);
 
+  // Logic to filter the rows before passing them to the table
+  const filteredRowData = showDuplicatesOnly 
+    ? rowData.filter((game: any) => game.duplicate === true || game.duplicate === 1)
+    : rowData;
+
   return (
     <div className="mx-auto max-w-5xl px-6 py-8">
       
@@ -161,7 +167,7 @@ export default function App() {
         <ToastContainer 
           position="top-left"
           autoClose={3000}
-          theme={ theme }
+          theme={theme}
         />
       </div>
 
@@ -172,12 +178,14 @@ export default function App() {
         onSearchChange={setGlobalFilter}
         onImportGOG={() => setShowImport(true)}
         onImportSteam={() => setShowSteamImport(true)}
+        showDuplicatesOnly={showDuplicatesOnly}
+        setShowDuplicatesOnly={setShowDuplicatesOnly}
       />
 
       {/** Table that shows games */}
       <GameDataTable 
         columns={columns} 
-        data={rowData} 
+        data={filteredRowData} 
         globalFilter={globalFilter} 
         setGlobalFilter={setGlobalFilter}
       />

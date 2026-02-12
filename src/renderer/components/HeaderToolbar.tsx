@@ -31,9 +31,11 @@ interface HeaderToolbarProps {
   onImportSteam: () => void;
   searchQuery: string;
   onSearchChange: (value: string) => void;
+  showDuplicatesOnly: boolean;
+  setShowDuplicatesOnly: (val: boolean) => void;
 }
 
-export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, onSearchChange }: HeaderToolbarProps) {
+export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, onSearchChange, showDuplicatesOnly, setShowDuplicatesOnly }: HeaderToolbarProps) {
   const { isHydrating } = useHydration();
   const uniqueCount = stats.total - stats.duplicates;
   
@@ -96,7 +98,7 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
           </Badge>
 
           {stats.duplicates > 0 && (
-            <Badge variant="destructive" className="bg-duplicate hover:bg-duplicate/80 py-1.5 px-3 shrink-0 ">
+            <Badge onClick={() => setShowDuplicatesOnly(!showDuplicatesOnly)} variant="destructive" className="bg-duplicate hover:bg-duplicate/80 py-1.5 px-3 shrink-0 ">
               {stats.duplicates}
               <Layers2 data-icon="inline-start" className="w-4 h-4 ml-1" />
             </Badge>
@@ -127,12 +129,16 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
               <Plus className="w-4 h-4 mr-2" />
               Sync GOG
             </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-border" />
             <DropdownMenuItem onClick={onImportSteam} className="cursor-pointer focus:bg-accent focus:text-accent-foreground">
               <div className={`flex items-center gap-2 text-xs font-medium ${isHydrating ? "text-blue-500 animate-pulse" :  ""}`}>
                 <RefreshCw className={`w-4 h-4 mr-2 ${isHydrating ? "text-blue-500 animate-spin" : ""}`} />
               </div>
               Import Steam
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="bg-border" />
+            <DropdownMenuItem onClick={() => setShowDuplicatesOnly(!showDuplicatesOnly)} className="cursor-pointer focus:bg-accent focus:text-accent-foreground">
+              <Layers2 className={`w-4 h-4 mr-2 ${showDuplicatesOnly ? "text-destructive" : ""}`} />
+              {showDuplicatesOnly ? "Show All Games" : "Show Duplicates Only"}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
