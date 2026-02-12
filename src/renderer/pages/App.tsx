@@ -13,22 +13,26 @@ import "../assets/css/App.css"
 import "../assets/css/dist.css"
 
 const UpdateToast = () => (
-  <div>
-    Update Downloaded! Restart the app to apply changes.
+  <div style={{ display: 'inline-flex', alignItems: 'center', flexWrap: 'wrap' }}>
+    <span>Update Downloaded!</span>
     <button 
       onClick={() => window.api.restartApp()}
       style={{
-        marginLeft: '10px',
+        marginLeft: '5px',
+        marginRight: '5px',
         padding: '4px 8px',
         background: '#2ecc71',
         color: 'white',
         border: 'none',
         borderRadius: '4px',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        fontSize: '14px',
+        lineHeight: '1'
       }}
-    >
+      >
       Restart Now
     </button>
+    <span>to apply changes.</span>
   </div>
 );
 
