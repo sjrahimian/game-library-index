@@ -58,6 +58,8 @@ npm install
 npm start
 ```
 
+Finally, in a separate terminal run: `npm run tailwind:watch`.
+
 Build a release.
 ```bash
 npm run package
