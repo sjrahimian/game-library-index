@@ -39,14 +39,20 @@ export default function App() {
   const [stats, setStats] = useState({ steam: 0, gog: 0, total: 0, duplicates: 0 });
   const [rowData, setRowData] = useState([]);
 
+  // Fetch & refresh game data for table
   useEffect(() => {
     window.api.getGames().then(setRowData);
     
-    // Your existing hydration/sync listeners go here, 
-    // just calling setRowData(newData) will refresh the TanStack table.
+    // Listen for a 'sync-complete' event from main to auto-refresh
+    const unsubscribe = window.api.onSyncComplete(() => {
+      window.api.getGames().then(setRowData);
+    });
+
+    return () => unsubscribe();
+
   }, []);
 
-  // Magic for the updater
+  // Magic for the application updater
   useEffect(() => {
     const toastId = "app-updater";
 
@@ -69,7 +75,7 @@ export default function App() {
       }
     });
 
-    // Handle Completion (Morphs the progress bar into the Button)
+    // Handle completion (morph the progress bar into button)
     const unsubscribeReady = window.electron.ipcRenderer.on('update-ready', () => {
       toast.update(toastId, {
         render: <UpdateToast />,
