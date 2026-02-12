@@ -72,7 +72,7 @@ export function getGames() {
     });
 }
 
-export function setupStatsHandlers() {
+export function getStats() {
   ipcMain.handle('get-stats', async () => {
     try {
       // 1. Total GOG Games

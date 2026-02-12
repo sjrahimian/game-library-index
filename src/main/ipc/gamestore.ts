@@ -80,17 +80,3 @@ export function syncSteamLibraryAndDB() {
     
   });
 }
-
-export function syncSteamLibraryAndDBUnofficial() {
-  ipcMain.handle('sync:steamNoApi', async (_event, steamId: string) => {
-    if (!steamId) {
-      throw new Error('Steam ID missing');
-    }
-
-    console.log('Starting Steam library sync using unofficial API...');
-
-    const rawData = await fetchSteamLibraryUnofficial(steamId);
-    
-    console.info('...Steam library sync completed.');
-  });
-}

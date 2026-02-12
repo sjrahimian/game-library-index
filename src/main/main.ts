@@ -16,7 +16,7 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
 // Local libraries
-import { getGames, setupStatsHandlers } from './ipc/database';
+import { getGames, getStats } from './ipc/database';
 import { clearGogCookies, syncGogLibraryAndDB, syncSteamLibraryAndDB, syncSteamLibraryAndDBUnofficial } from './ipc/gamestore';
 
 
@@ -176,4 +176,4 @@ syncSteamLibraryAndDBUnofficial();
 // ************************* \\
 // IPC handler to get all games
 getGames();
-setupStatsHandlers();
+getStats();

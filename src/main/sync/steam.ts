@@ -27,46 +27,6 @@ export async function fetchSteamLibrary(apiKey: string, steamId: string) {
   });
 }
 
-/**
- * Fetches the user's game list using the unofficial community endpoint.
- * Requires the user's profile to be PUBLIC.
- */
-export async function fetchSteamLibraryUnofficial(steamId: string) {
-  return new Promise((resolve, reject) => {
-    // This endpoint returns a JSON-rich format of the user's library
-    const url = `https://steamcommunity.com/profiles/${steamId}/games/?tab=all&sort=name`;
-    console.log(url);
-
-    const request = net.request(url);
-
-    request.on('response', (response) => {
-      let data = '';
-      response.on('data', (chunk) => { data += chunk; });
-      response.on('end', () => {
-        try {
-          // The data is often embedded in a JavaScript variable 'rgGames' 
-          // We need to extract the JSON string from the HTML body
-          const match = data.match(/var rgGames = (\[.*\]);/);
-          console.log(data)
-          console.log(data.length)
-          console.log(match)
-          if (match && match[1]) {
-            const games = JSON.parse(match[1]);
-            resolve(games || []);
-          } else {
-            reject(new Error("Could not find game data. Is the profile private?"));
-          }
-        } catch (e) {
-          reject(e);
-        }
-      });
-    });
-
-    request.on('error', (err) => reject(err));
-    request.end();
-  });
-}
-
 export function prepSteamGamesForDatabase(rawData: any[]) {
   return rawData.map(item => {
     // Extract only the requested fields
