@@ -19,10 +19,18 @@ export const HydrationProvider = ({ children }: { children: ReactNode }) => {
     window.api.onHydrationStarted(handleStart);
     window.api.onHydrationFinished(handleFinished);
 
-    // Cleanup: This runs only when the app is closed/reloaded
+    const handleSingleGameHydrated = (data: any) => {
+      console.log("Game row hydrated:", data);
+      // You can trigger a table refresh here or update a local state
+    };
+
+    const removeHydratedListener = window.api.onGameHydrated(handleSingleGameHydrated);
+
+    // Cleanup when the app is closed/reloaded
     return () => {
       window.api.removeHydrationStartedListener(handleStart);
       window.api.removeHydrationFinishedListener(handleFinished);
+      if (removeHydratedListener) removeHydratedListener;
     };
   }, []);
 

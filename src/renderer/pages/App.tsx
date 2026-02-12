@@ -52,6 +52,51 @@ export default function App() {
 
   }, []);
 
+  // Listener for when a specific game finishes hydrating
+  useEffect(() => {
+    const handleUpdate = (data: any) => {
+      // 1. Handle overall success/failure
+      if (!data.success) {
+        console.error(`Hydration failed: ${data.msg}`);
+        toast.error(`Failed to sync: ${data.msg}`);
+      } else {
+        console.log(`Success! Game ${data.gameId} hydrated.`);
+      }
+  
+      // 2. Update the local rowData state
+      setRowData(prevRows => {
+        return prevRows.map(row => {
+          // Find the specific row that was just hydrated
+          if (row.id === data.gameId) {
+            const currentStores = row.stores || [];
+            const updatedStores = currentStores.map((s: any) => 
+              s && s.name === 'Steam' ? { ...s, os: data.os } : s
+            );
+  
+            return { 
+              ...row, 
+              stores: updatedStores,
+              category: data.category || row.category,
+              releaseDate: data.releaseDate || row.releaseDate,
+              duplicate: data.duplicate ?? row.duplicate // Update duplicate status if provided
+            };
+          }
+          return row;
+        });
+      });
+    };
+  
+    // Subscribe to the event
+    window.api.onGameHydrated(handleUpdate);
+  
+    // Cleanup the listener when the component unmounts
+    return () => {
+      if (window.api.removeGameHydratedListener) {
+          window.api.removeGameHydratedListener(handleUpdate);
+      }
+    };
+  }, []);
+
   // Magic for the application updater
   useEffect(() => {
     const toastId = "app-updater";

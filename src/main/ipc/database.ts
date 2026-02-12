@@ -228,7 +228,15 @@ export async function hydrateSteamGames(event: Electron.IpcMainInvokeEvent) {
         }).where(eq(store_entries.gameId, game.id));
 
         console.warn(msg)
-        event.sender.send('game-hydrated', {success: data[game.appId]?.success, msg: msg});
+        event.sender.send('game-hydrated', { 
+          success: data[game.appId]?.success,
+          gameId: game.id, 
+          appId: game.appId,
+          os: normalizeOSData({ windows: false, mac: false, linux: false }),
+          category: "N/A",
+          releaseDate: "N/A",
+          msg: msg
+        });
         
       }
 

@@ -29,7 +29,7 @@ export default function GOGImportModal({ onClose }: Props) {
       if (action === 'clear') {
         toast.success(`Successfully removed cookies.`);
       } else if (result) {
-        toast.success(`Success! Added ${result.count} new games.`);
+        toast.success(result.count > 0 ? `Success! Added ${result.count} games from GOG.` : "Library is up-to-date.");
       }
     } catch (err: any) {
       toast.error(err?.message || `Failed to: ${action}`);

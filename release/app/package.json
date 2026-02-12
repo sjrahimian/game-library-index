@@ -2,7 +2,7 @@
   "name": "game-library-index",
   "productName": "Game Library Index",
   "description": "A unified game directory that indexes your Steam and GOG libraries to uncover basic game details, OS info, and duplicate ownership.",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "license": "GPL-3.0-only",
   "author": {
     "name": "",

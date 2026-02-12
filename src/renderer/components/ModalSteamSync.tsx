@@ -33,7 +33,7 @@ export default function SteamSyncModal({ onClose }: Props) {
     setLoading(true);
     try {
       const result = await window.api.syncSteam(apiKey, steamId);
-      toast.success(`Success! Added ${result.count} new games.`);
+      toast.success(result.count > 0 ? `Success! Added ${result.count} games from Steam.` : "Library is up-to-date.");
     } catch (err: any) {
       toast.error(err?.message || "Failed to sync.");
     } finally {
