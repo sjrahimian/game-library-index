@@ -244,6 +244,7 @@
       ]
     },
     "win": {
+      "artifactName": "${name}_${version}_win-portable.${ext}",
       "target": [
         {
           "target": "nsis",
@@ -264,15 +265,10 @@
       "oneClick": false,
       "perMachine": true,
       "allowElevation": true,
-      "disableWebInstaller": true,
       "allowToChangeInstallationDirectory": true,
       "license": "LICENSE",
       "deleteAppDataOnUninstall": true,
       "uninstallDisplayName": "${productName}"
-    },
-    "zip": {
-      "artifactName": "${name}_${version}_win-portable.${ext}",
-      "requestExecutionLevel": "user"
     },
     "linux": {
       "target": [
