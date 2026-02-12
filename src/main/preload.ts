@@ -5,8 +5,7 @@ import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 export type Channels = 
   | 'ipc-example' 
   | 'update-progress' 
-  | 'update-ready'
-  | 'restart-app';
+  | 'update-ready';
   
 const electronHandler = {
   ipcRenderer: {
@@ -14,8 +13,10 @@ const electronHandler = {
       ipcRenderer.send(channel, ...args);
     },
     on(channel: Channels, func: (...args: unknown[]) => void) {
-      const subscription = (_event: IpcRendererEvent, ...args: unknown[]) =>
+      const subscription = (_event: IpcRendererEvent, ...args: unknown[]) => {
+        console.log(`IPC Received on ${channel}:`, args); // ADD THIS LINE
         func(...args);
+      };
       ipcRenderer.on(channel, subscription);
 
       return () => {
@@ -24,9 +25,6 @@ const electronHandler = {
     },
     once(channel: Channels, func: (...args: unknown[]) => void) {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
-    },
-    restartApp() {
-      ipcRenderer.send('restart-app');
     },
   },
 };
@@ -61,6 +59,19 @@ contextBridge.exposeInMainWorld('api', {
   removeHydrationFinishedListener: (callback) => ipcRenderer.removeListener('hydration-finished', callback),
   removeGameHydratedListener: (callback) => ipcRenderer.removeListener('game-hydrated', callback),
 
+
+  // UPDATE LISTENERS
+  restartApp: () => ipcRenderer.send('restart-app'),
+  onUpdateProgress: (callback: (percent: number) => void) => {
+    const subscription = (_event: any, percent: number) => callback(percent);
+    ipcRenderer.on('update-progress', subscription);
+    return () => ipcRenderer.removeListener('update-progress', subscription);
+  },
+  onUpdateReady: (callback: () => void) => {
+    const subscription = () => callback();
+    ipcRenderer.on('update-ready', subscription);
+    return () => ipcRenderer.removeListener('update-ready', subscription);
+  },
 });
 
 contextBridge.exposeInMainWorld('electron', electronHandler);

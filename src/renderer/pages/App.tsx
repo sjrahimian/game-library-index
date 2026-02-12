@@ -16,7 +16,7 @@ const UpdateToast = () => (
   <div>
     Update Downloaded! Restart the app to apply changes.
     <button 
-      onClick={() => window.electron.ipcRenderer.restartApp()}
+      onClick={() => window.api.restartApp()}
       style={{
         marginLeft: '10px',
         padding: '4px 8px',
@@ -31,6 +31,7 @@ const UpdateToast = () => (
     </button>
   </div>
 );
+
 export default function App() {
   const theme = CurrentTheme();
   const [globalFilter, setGlobalFilter] = useState("");
@@ -102,9 +103,9 @@ export default function App() {
     const toastId = "app-updater";
 
     // Show update in progress
-    const unsubscribeProgress = window.electron.ipcRenderer.on('update-progress', (percent: number) => {
-      // Calculate 0.0 to 1.0 for the library
-      const progress = percent / 100;
+    const unsubscribeProgress = window.api.onUpdateProgress((percent: number) => {
+      const progress = percent / 100;      // Calculate 0.0 to 1.0
+
       if (!toast.isActive(toastId)) {
         toast.info(`Downloading Update... ${Math.round(percent)}%`, {
           toastId: toastId,
@@ -121,8 +122,8 @@ export default function App() {
     });
 
     // Handle completion (morph the progress bar into button)
-    const unsubscribeReady = window.electron.ipcRenderer.on('update-ready', () => {
-      toast.update(toastId, {
+    const unsubscribeReady = window.api.onUpdateReady(() => {
+        toast.update(toastId, {
         render: <UpdateToast />,
         type: 'success',
         progress: undefined,
@@ -150,6 +151,16 @@ export default function App() {
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-8">
+      
+      {/* Notification */}
+      <div>
+        <ToastContainer 
+          position="top-left"
+          autoClose={3000}
+          theme={ theme }
+        />
+      </div>
+
       {/* Header with search input, actions, & stats */}
       <HeaderToolbar 
         stats={stats}
@@ -170,15 +181,7 @@ export default function App() {
       {/* Modals... */}
       {showImport && <GOGImportModal onClose={() => setShowImport(false)} />}
       {showSteamImport && <SteamSyncModal onClose={() => setShowSteamImport(false)} />}
-      
-      {/* Notification */}
-      <div>
-        <ToastContainer 
-          position="top-left"
-          autoClose={3000}
-          theme={ theme }
-        />
-      </div>
+
     </div>
   );
 }
