@@ -181,18 +181,17 @@ export default function App() {
     const selectedGame = filteredRowData[randomIndex];
 
     // Notify the user
-    toast.info(`Why not play: ${selectedGame.title}?`, {
-      position: "top-center",
-      autoClose: 5000,
-      icon: <Gamepad2 className="text-blue-500" />,
-      className: "border-2 border-primary border-blue-500",
+    toast.info(
+      <span className="font-sans tracking-tight">
+        Why not play: <strong className="font-bold text-primary">{selectedGame.title}</strong>?
+      </span>,
+      {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: true,
+        icon: <Gamepad2 className="text-blue-500" />,
     });
 
-    // OPTIONAL: If you want the table to jump to that game, 
-    // you would need to calculate the page index and set it:
-    // const pageSize = 20; 
-    // const pageIndex = Math.floor(randomIndex / pageSize);
-    // table.setPageIndex(pageIndex); 
   };
 
   return (
@@ -204,6 +203,7 @@ export default function App() {
           position="top-left"
           autoClose={3000}
           theme={theme}
+          toastClassName="border-2 border-accent shadow-lg"
         />
       </div>
 
