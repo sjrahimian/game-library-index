@@ -10,7 +10,7 @@ import {
     DropdownMenuTrigger,
     DropdownMenuSeparator 
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Layers2, Plus, RefreshCw, Search, Settings, Disc3, Dices } from "lucide-react";
+import { ChevronDown, Layers2, Plus, RefreshCw, Search, Settings, Disc3, Dices, FolderOpen } from "lucide-react";
 
 import { useHydration } from '../hooks/HydrationContext';
 
@@ -144,6 +144,11 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
             <DropdownMenuItem onClick={onSurpriseMe} className="cursor-pointer focus:bg-accent focus:text-accent-foreground">
               <Dices className="w-4 h-4 mr-2" />
               Pick a Random Game
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => window.api.openDatabaseFolder()} className="cursor-pointer focus:bg-accent focus:text-accent-foreground">
+              <FolderOpen className="w-4 h-4 mr-2" />
+              Open Database Location
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

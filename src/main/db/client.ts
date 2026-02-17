@@ -23,7 +23,7 @@ const getDatabasePath = (filename: string) => {
   }
 };
 
-const dbPath = getDatabasePath('gamelib.db');
+export const dbPath = getDatabasePath('gamelib.db');
 console.debug("Database path: ", dbPath);
 
 // Initialization

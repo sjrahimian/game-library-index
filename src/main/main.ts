@@ -11,6 +11,7 @@
 import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
+import fs from 'fs';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
@@ -18,6 +19,7 @@ import { resolveHtmlPath } from './util';
 // Local libraries
 import { getGames, getStats } from './ipc/database';
 import { clearGogCookies, syncGogLibraryAndDB, syncSteamLibraryAndDB } from './ipc/gamestore';
+import { dbPath } from './db/client';
 
 
 // init logger
@@ -166,6 +168,26 @@ ipcMain.on('restart-app', () => {
   autoUpdater.quitAndInstall(true, true);
 });
   
+function openDatabaseDir () {
+  ipcMain.on('open-db-dir', () => {
+    
+    try {
+
+      if (fs.existsSync(dbPath)) {
+        shell.showItemInFolder(dbPath);
+      } else {
+        console.warn("Database file not found at:", dbPath);
+        shell.openPath(path.dirname(dbPath));
+      }
+      
+    } catch (error) {
+      console.error("FileSystem error:", error);
+      return { path: dbPath };
+    }
+
+  });
+};
+
 // ************************************ \\
 // IPC handlers account sync to game store
 clearGogCookies();
@@ -173,6 +195,7 @@ syncGogLibraryAndDB();
 syncSteamLibraryAndDB();
 
 // ************************* \\
-// IPC handler to get all games
+// IPC handler for other app functions
 getGames();
 getStats();
+openDatabaseDir();

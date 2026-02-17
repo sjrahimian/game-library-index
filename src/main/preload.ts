@@ -34,6 +34,7 @@ contextBridge.exposeInMainWorld('api', {
   
   getGames: () => ipcRenderer.invoke('get-games'),
   getLibraryStats: () => ipcRenderer.invoke('get-stats'),
+  openDatabaseFolder: () => ipcRenderer.send('open-db-dir'),
 
   // --- Fetch game library ---
   syncGog: () => ipcRenderer.invoke('sync:gog'),
