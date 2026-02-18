@@ -11,7 +11,7 @@ import { HeaderToolbar } from "../components/HeaderToolbar"; // Import the new c
 import { CurrentTheme } from "../hooks/CurrentTheme";
 import "../assets/css/App.css"
 import "../assets/css/dist.css"
-import { Gamepad2 } from 'lucide-react';
+import { Gamepad2, Search } from 'lucide-react';
 
 const UpdateToast = () => (
   <div style={{ display: 'inline-flex', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -45,6 +45,39 @@ export default function App() {
   const [showDuplicatesOnly, setShowDuplicatesOnly] = useState(false); // Add this
   const [showGogImport, setshowGogImport] = useState(false);
   const [showSteamImport, setShowSteamImport] = useState(false);
+
+  // Logic to filter the rows before passing them to the table
+  const displayData = React.useMemo(() => {
+    if (showDuplicatesOnly) {
+      return rowData.filter(game => game.duplicate);
+    }
+    return rowData;
+  }, [rowData, showDuplicatesOnly]);
+
+  const isSearching = globalFilter.length > 0;
+  const hasNoResults = displayData.length === 0;
+
+  useEffect(() => {
+    if (globalFilter.length > 0 && showDuplicatesOnly) {
+      toast.warn(
+        <span>
+          Searching within <strong>Duplicates Only</strong>. 
+          <button 
+            onClick={() => setShowDuplicatesOnly(false)}
+            className="ml-2 underline font-bold hover:text-amber-700 dark:hover:text-amber-200"
+          >
+            Clear filter to search all games
+          </button>
+        </span>,
+        {
+          toastId: "duplicate-search-warning",
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: true,
+          icon: <Search className="w-4 h-4 text-yellow-500" />,
+      });
+    }
+  }, [globalFilter, showDuplicatesOnly]);
 
   // Fetch & refresh game data for table
   useEffect(() => {
@@ -164,14 +197,6 @@ export default function App() {
     refreshStats();
     return window.api.onSyncComplete(refreshStats);
   }, []);
-
-  // Logic to filter the rows before passing them to the table
-  const displayData = React.useMemo(() => {
-    if (showDuplicatesOnly) {
-      return rowData.filter(game => game.duplicate);
-    }
-    return rowData;
-  }, [rowData, showDuplicatesOnly]);
     
   // Pick a random game from the list
   const handleSurpriseMe = () => {
