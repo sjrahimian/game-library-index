@@ -7,7 +7,9 @@ import {
   PaginationState,
   flexRender,
   ColumnDef,
+  FilterFn
 } from "@tanstack/react-table";
+import { rankItem } from '@tanstack/match-sorter-utils';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -26,7 +28,14 @@ interface DataTableProps<TData, TValue> {
   setGlobalFilter: (val: string) => void;
 }
 
-export function GameDataTable<TData, TValue>({ columns, data, globalFilter, setGlobalFilter }: DataTableProps<TData, TValue>) {
+
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  const itemRank = rankItem(row.getValue(columnId), value);
+  addMeta({ itemRank, });
+  return itemRank.passed;
+};
+
+function GameDataTableInner<TData, TValue>({ columns, data, globalFilter, setGlobalFilter }: DataTableProps<TData, TValue>) {
 
 // Initialize pagination state
 const [pagination, setPagination] = useState<PaginationState>({
@@ -37,11 +46,15 @@ const [pagination, setPagination] = useState<PaginationState>({
   const table = useReactTable({
     data,
     columns,
+    filterFns: {
+      fuzzy: fuzzyFilter, // 1. Register the function
+    },
     state: { 
       globalFilter,
       pagination,
     },
     onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: 'fuzzy',
     onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -170,3 +183,5 @@ const [pagination, setPagination] = useState<PaginationState>({
     </div>
   );
 }
+
+export const GameDataTable = React.memo(GameDataTableInner) as typeof GameDataTableInner;

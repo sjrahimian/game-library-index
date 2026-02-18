@@ -39,12 +39,12 @@ const UpdateToast = () => (
 
 export default function App() {
   const theme = CurrentTheme();
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [showImport, setShowImport] = useState(false);
-  const [showSteamImport, setShowSteamImport] = useState(false);
   const [stats, setStats] = useState({ steam: 0, gog: 0, total: 0, duplicates: 0 });
+  const [globalFilter, setGlobalFilter] = useState("");
   const [rowData, setRowData] = useState([]);
   const [showDuplicatesOnly, setShowDuplicatesOnly] = useState(false); // Add this
+  const [showGogImport, setshowGogImport] = useState(false);
+  const [showSteamImport, setShowSteamImport] = useState(false);
 
   // Fetch & refresh game data for table
   useEffect(() => {
@@ -166,19 +166,22 @@ export default function App() {
   }, []);
 
   // Logic to filter the rows before passing them to the table
-  const filteredRowData = showDuplicatesOnly 
-    ? rowData.filter((game: any) => game.duplicate === true || game.duplicate === 1)
-    : rowData;
-
+  const displayData = React.useMemo(() => {
+    if (showDuplicatesOnly) {
+      return rowData.filter(game => game.duplicate);
+    }
+    return rowData;
+  }, [rowData, showDuplicatesOnly]);
+    
+  // Pick a random game from the list
   const handleSurpriseMe = () => {
-    if (filteredRowData.length === 0) {
+    if (displayData.length === 0) {
       toast.warn("No games found in the current view!");
       return;
     }
 
-    // Pick a random game from the ALREADY filtered/sorted list
-    const randomIndex = Math.floor(Math.random() * filteredRowData.length);
-    const selectedGame = filteredRowData[randomIndex];
+    const randomIndex = Math.floor(Math.random() * displayData.length);
+    const selectedGame = displayData[randomIndex];
 
     // Notify the user
     toast.info(
@@ -212,7 +215,7 @@ export default function App() {
         stats={stats}
         searchQuery={globalFilter}
         onSearchChange={setGlobalFilter}
-        onImportGOG={() => setShowImport(true)}
+        onImportGOG={() => setshowGogImport(true)}
         onImportSteam={() => setShowSteamImport(true)}
         showDuplicatesOnly={showDuplicatesOnly}
         setShowDuplicatesOnly={setShowDuplicatesOnly}
@@ -222,13 +225,13 @@ export default function App() {
       {/** Table that shows games */}
       <GameDataTable 
         columns={columns} 
-        data={filteredRowData} 
+        data={displayData} 
         globalFilter={globalFilter} 
         setGlobalFilter={setGlobalFilter}
       />
 
       {/* Modals... */}
-      {showImport && <GOGImportModal onClose={() => setShowImport(false)} />}
+      {showGogImport && <GOGImportModal onClose={() => setshowGogImport(false)} />}
       {showSteamImport && <SteamSyncModal onClose={() => setShowSteamImport(false)} />}
 
     </div>

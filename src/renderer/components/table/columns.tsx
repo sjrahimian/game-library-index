@@ -21,6 +21,7 @@ export const columns: ColumnDef<Game>[] = [
   {
     accessorKey: "title",
     header: "Title",
+    enableGlobalFilter: true,
     cell: ({ row }) => {
       const title = row.getValue("title") as string;
       const isTruncated = title.length > 35;

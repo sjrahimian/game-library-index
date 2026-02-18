@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -37,9 +37,22 @@ interface HeaderToolbarProps {
 }
 
 export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, onSearchChange, showDuplicatesOnly, setShowDuplicatesOnly, onSurpriseMe }: HeaderToolbarProps) {
+  const [localSearch, setLocalSearch] = useState(searchQuery);
   const { isHydrating } = useHydration();
   const uniqueCount = stats.total - stats.duplicates;
   
+  useEffect(() => {
+    // Set a timer to update the actual table 250ms after the user stops typing
+    const timer = setTimeout(() => {
+      if (localSearch !== searchQuery) {
+        onSearchChange(localSearch);
+      }
+    }, 250);
+
+    // If the user types again before 250ms, clear the timer and start over
+    return () => clearTimeout(timer);
+  }, [localSearch, onSearchChange, searchQuery]);
+
   return (
     <Card className="flex flex-col md:flex-row items-center justify-between p-4 mb-6 gap-4 shadow-sm border-border">
       <ThemeToggle />
@@ -50,8 +63,8 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
           <Input
             id="search-input"
             placeholder=" "
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
             className="peer pl-9 bg-background h-11 pt-4 
             /* Focus styles for the blue glow */
 
