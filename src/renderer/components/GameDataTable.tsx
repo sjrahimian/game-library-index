@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Disc3, Plus, Search } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -94,18 +95,49 @@ const [pagination, setPagination] = useState<PaginationState>({
 
             {/* Body content */}
             <TableBody>
-                {table.getRowModel().rows.map((row) => (
-                <TableRow 
-                    key={row.id} 
-                    className={(row.original as any).duplicate ? "bg-duplicate hover:bg-duplicate/80" : ""}
-                >
-                    {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                    ))}
+              {data.length === 0 ? (
+                /** Case 1 - No games exist in database */
+                <TableRow className="hover:bg-transparent! bg-transparent!">
+                  <TableCell colSpan={columns.length} className="h-96 text-center">
+                    <div className="flex flex-col items-center justify-center gap-4 text-muted-foreground">
+                      <div className="relative">
+                        <Disc3 className="w-18 h-18 opacity-15 animate-spin-slow" />
+                        <Plus className="w-8 h-8 absolute -bottom-2 -right-2 opacity-40" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-xl font-semibold text-foreground">Your library is empty</p>
+                        <p className="text-sm max-w-[250px] mx-auto">
+                          Import your games from Steam or GOG to get started.
+                        </p>
+                      </div>
+                    </div>
+                  </TableCell>
                 </TableRow>
-                ))}
+
+              ) : table.getRowModel().rows?.length ? (
+                /** Case 2 - Games exist */
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id} 
+                  className={(row.original as any).duplicate ? "bg-duplicate hover:bg-duplicate/80" : ""}>
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                      ))}
+                  </TableRow>
+                ))
+              ) : (
+                /** Case 3 - Games exist but no search hits */
+                <TableRow className="hover:bg-transparent! bg-transparent!">
+                  <TableCell colSpan={columns.length} className="h-96 text-center text-muted-foreground">
+                    <div className="flex flex-col items-center justify-center gap-4 ">
+                      <Search className="w-16 h-16 opacity-40" />
+                      <p>No games found matching "{globalFilter}".</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
+
             </TableBody>
           </Table>
         </div>
