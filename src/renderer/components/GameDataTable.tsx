@@ -98,7 +98,7 @@ const [pagination, setPagination] = useState<PaginationState>({
               {data.length === 0 ? (
                 /** Case 1 - No games exist in database */
                 <TableRow className="hover:bg-transparent! bg-transparent!">
-                  <TableCell colSpan={columns.length} className="h-96 text-center">
+                  <TableCell colSpan={columns.length} className="h-82 text-center">
                     <div className="flex flex-col items-center justify-center gap-4 text-muted-foreground">
                       <div className="relative">
                         <Disc3 className="w-18 h-18 opacity-15 animate-spin-slow" />
@@ -129,7 +129,7 @@ const [pagination, setPagination] = useState<PaginationState>({
               ) : (
                 /** Case 3 - Games exist but no search hits */
                 <TableRow className="hover:bg-transparent! bg-transparent!">
-                  <TableCell colSpan={columns.length} className="h-96 text-center text-muted-foreground">
+                  <TableCell colSpan={columns.length} className="h-82 text-center text-muted-foreground">
                     <div className="flex flex-col items-center justify-center gap-4 ">
                       <Search className="w-16 h-16 opacity-40" />
                       <p>No games found matching "{globalFilter}".</p>

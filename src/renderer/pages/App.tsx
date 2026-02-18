@@ -63,7 +63,11 @@ export default function App() {
         <span>
           Searching within <strong>Duplicates Only</strong>. 
           <button 
-            onClick={() => setShowDuplicatesOnly(false)}
+            onClick={() => {
+              setShowDuplicatesOnly(false);
+              // This closes the specific toast immediately
+              toast.dismiss("duplicate-search-warning");
+            }}
             className="ml-2 underline font-bold hover:text-amber-700 dark:hover:text-amber-200"
           >
             Clear filter to search all games
@@ -76,6 +80,8 @@ export default function App() {
           hideProgressBar: true,
           icon: <Search className="w-4 h-4 text-yellow-500" />,
       });
+    } else {
+      toast.dismiss("duplicate-search-warning");
     }
   }, [globalFilter, showDuplicatesOnly]);
 
