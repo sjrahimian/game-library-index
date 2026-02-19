@@ -12,27 +12,17 @@ import { CurrentTheme } from "../hooks/CurrentTheme";
 import "../assets/css/App.css"
 import "../assets/css/dist.css"
 import { Gamepad2, ListRestart, Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const UpdateToast = () => (
   <div style={{ display: 'inline-flex', alignItems: 'center', flexWrap: 'wrap' }}>
     <span>Update Downloaded!</span>
-    <button 
+    <Button 
       onClick={() => window.api.restartApp()}
-      style={{
-        marginLeft: '5px',
-        marginRight: '5px',
-        padding: '4px 8px',
-        background: '#2ecc71',
-        color: 'white',
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer',
-        fontSize: '14px',
-        lineHeight: '1'
-      }}
-      >
+      className="h-auto px-2 py-1 mx-1 text-sm leading-none bg-[#2ecc71] hover:bg-[#27ae60] text-white border-none"
+    >
       Restart Now
-    </button>
+    </Button>
     <span>to apply changes.</span>
   </div>
 );
@@ -60,18 +50,18 @@ export default function App() {
   useEffect(() => {
     if (globalFilter.length > 0 && showDuplicatesOnly) {
       toast.warn(
-        <span>
-          Searching within <strong>Duplicates Only</strong>. 
-          <button 
-            onClick={() => {
-              setShowDuplicatesOnly(false);
-              toast.dismiss("duplicate-search-warning");
-            }}
-            className="ml-2 underline font-bold hover:text-amber-700 dark:hover:text-amber-200"
-          >
-            Clear filter to search all games
-          </button>
-        </span>,
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', textAlign: 'center' }}>
+          <span>
+            Searching within <strong>Duplicates Only</strong>. 
+            <Button variant="outline" className="mt-1 shrink-0 border-border marginTop"
+              onClick={() => {
+                setShowDuplicatesOnly(false);
+                toast.dismiss("duplicate-search-warning");
+              }}>
+              Clear filter to search all games
+            </Button>
+          </span>
+        </div>,
         {
           toastId: "duplicate-search-warning",
           position: "top-center",

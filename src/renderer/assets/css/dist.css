@@ -12,7 +12,6 @@
     --color-red-600: oklch(57.7% 0.245 27.325);
     --color-red-800: oklch(44.4% 0.177 26.899);
     --color-orange-500: oklch(70.5% 0.213 47.604);
-    --color-orange-500: oklch(70.5% 0.213 47.604);
     --color-amber-200: oklch(92.4% 0.12 95.746);
     --color-amber-700: oklch(55.5% 0.163 48.998);
     --color-yellow-100: oklch(97.3% 0.071 103.193);
@@ -343,11 +342,17 @@
   .-mx-1 {
     margin-inline: calc(var(--spacing) * -1);
   }
+  .mx-1 {
+    margin-inline: calc(var(--spacing) * 1);
+  }
   .mx-auto {
     margin-inline: auto;
   }
   .my-1 {
     margin-block: calc(var(--spacing) * 1);
+  }
+  .mt-1 {
+    margin-top: calc(var(--spacing) * 1);
   }
   .mt-4 {
     margin-top: calc(var(--spacing) * 4);
@@ -421,9 +426,6 @@
   .h-14 {
     height: calc(var(--spacing) * 14);
   }
-  .h-14 {
-    height: calc(var(--spacing) * 14);
-  }
   .h-16 {
     height: calc(var(--spacing) * 16);
   }
@@ -438,6 +440,9 @@
   }
   .h-\[var\(--radix-select-trigger-height\)\] {
     height: var(--radix-select-trigger-height);
+  }
+  .h-auto {
+    height: auto;
   }
   .h-px {
     height: 1px;
@@ -468,9 +473,6 @@
   }
   .w-10 {
     width: calc(var(--spacing) * 10);
-  }
-  .w-14 {
-    width: calc(var(--spacing) * 14);
   }
   .w-14 {
     width: calc(var(--spacing) * 14);
@@ -709,6 +711,10 @@
     border-left-style: var(--tw-border-style);
     border-left-width: 1px;
   }
+  .border-none {
+    --tw-border-style: none;
+    border-style: none;
+  }
   .border-accent {
     border-color: var(--color-accent);
   }
@@ -729,6 +735,9 @@
   }
   .border-yellow-700 {
     border-color: var(--color-yellow-700);
+  }
+  .bg-\[\#2ecc71\] {
+    background-color: #2ecc71;
   }
   .bg-\[\#86328a\] {
     background-color: #86328a;
@@ -998,9 +1007,6 @@
   .text-orange-500 {
     color: var(--color-orange-500);
   }
-  .text-orange-500 {
-    color: var(--color-orange-500);
-  }
   .text-popover-foreground {
     color: var(--color-popover-foreground);
   }
@@ -1188,6 +1194,13 @@
   .placeholder\:text-muted-foreground {
     &::placeholder {
       color: var(--color-muted-foreground);
+    }
+  }
+  .hover\:bg-\[\#27ae60\] {
+    &:hover {
+      @media (hover: hover) {
+        background-color: #27ae60;
+      }
     }
   }
   .hover\:bg-\[\#86328a\]\/90 {
