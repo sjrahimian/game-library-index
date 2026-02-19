@@ -11,6 +11,7 @@
     --color-red-300: oklch(80.8% 0.114 19.571);
     --color-red-600: oklch(57.7% 0.245 27.325);
     --color-red-800: oklch(44.4% 0.177 26.899);
+    --color-orange-500: oklch(70.5% 0.213 47.604);
     --color-amber-200: oklch(92.4% 0.12 95.746);
     --color-amber-700: oklch(55.5% 0.163 48.998);
     --color-yellow-500: oklch(79.5% 0.184 86.047);
@@ -269,15 +270,6 @@
   .-top-1 {
     top: calc(var(--spacing) * -1);
   }
-  .-top-2 {
-    top: calc(var(--spacing) * -2);
-  }
-  .-top-2\.5 {
-    top: calc(var(--spacing) * -2.5);
-  }
-  .-top-3 {
-    top: calc(var(--spacing) * -3);
-  }
   .top-0 {
     top: calc(var(--spacing) * 0);
   }
@@ -299,14 +291,11 @@
   .-right-2 {
     right: calc(var(--spacing) * -2);
   }
-  .-right-3 {
-    right: calc(var(--spacing) * -3);
+  .right-3 {
+    right: calc(var(--spacing) * 3);
   }
   .right-4 {
     right: calc(var(--spacing) * 4);
-  }
-  .-bottom-1 {
-    bottom: calc(var(--spacing) * -1);
   }
   .-bottom-2 {
     bottom: calc(var(--spacing) * -2);
@@ -410,9 +399,6 @@
   .h-5 {
     height: calc(var(--spacing) * 5);
   }
-  .h-6 {
-    height: calc(var(--spacing) * 6);
-  }
   .h-8 {
     height: calc(var(--spacing) * 8);
   }
@@ -428,23 +414,17 @@
   .h-12 {
     height: calc(var(--spacing) * 12);
   }
+  .h-14 {
+    height: calc(var(--spacing) * 14);
+  }
   .h-16 {
     height: calc(var(--spacing) * 16);
   }
   .h-18 {
     height: calc(var(--spacing) * 18);
   }
-  .h-72 {
-    height: calc(var(--spacing) * 72);
-  }
   .h-82 {
     height: calc(var(--spacing) * 82);
-  }
-  .h-96 {
-    height: calc(var(--spacing) * 96);
-  }
-  .h-996 {
-    height: calc(var(--spacing) * 996);
   }
   .h-\[550px\] {
     height: 550px;
@@ -476,14 +456,14 @@
   .w-5 {
     width: calc(var(--spacing) * 5);
   }
-  .w-6 {
-    width: calc(var(--spacing) * 6);
-  }
   .w-8 {
     width: calc(var(--spacing) * 8);
   }
   .w-10 {
     width: calc(var(--spacing) * 10);
+  }
+  .w-14 {
+    width: calc(var(--spacing) * 14);
   }
   .w-16 {
     width: calc(var(--spacing) * 16);
@@ -824,6 +804,9 @@
   .p-0 {
     padding: calc(var(--spacing) * 0);
   }
+  .p-0\.5 {
+    padding: calc(var(--spacing) * 0.5);
+  }
   .p-1 {
     padding: calc(var(--spacing) * 1);
   }
@@ -1002,6 +985,9 @@
   .text-muted-foreground {
     color: var(--color-muted-foreground);
   }
+  .text-orange-500 {
+    color: var(--color-orange-500);
+  }
   .text-popover-foreground {
     color: var(--color-popover-foreground);
   }
@@ -1041,20 +1027,8 @@
   .underline-offset-4 {
     text-underline-offset: 4px;
   }
-  .opacity-0 {
-    opacity: 0%;
-  }
-  .opacity-10 {
-    opacity: 10%;
-  }
   .opacity-15 {
     opacity: 15%;
-  }
-  .opacity-20 {
-    opacity: 20%;
-  }
-  .opacity-30 {
-    opacity: 30%;
   }
   .opacity-40 {
     opacity: 40%;
@@ -1238,6 +1212,16 @@
       }
     }
   }
+  .hover\:bg-duplicate\/60 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-duplicate);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--color-duplicate) 60%, transparent);
+        }
+      }
+    }
+  }
   .hover\:bg-duplicate\/80 {
     &:hover {
       @media (hover: hover) {
@@ -1255,6 +1239,13 @@
         @supports (color: color-mix(in lab, red, red)) {
           background-color: color-mix(in oklab, var(--color-gog-background) 60%, transparent);
         }
+      }
+    }
+  }
+  .hover\:bg-muted {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-muted);
       }
     }
   }
@@ -1336,6 +1327,13 @@
     &:hover {
       @media (hover: hover) {
         color: var(--color-amber-700);
+      }
+    }
+  }
+  .hover\:text-foreground {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-foreground);
       }
     }
   }
@@ -1661,6 +1659,9 @@
 }
 .animate-spin-slow {
   animation: spin-slow 8s linear infinite;
+}
+input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-results-button, input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
 }
 @property --tw-border-spacing-x {
   syntax: "<length>";

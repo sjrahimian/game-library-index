@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,7 +10,7 @@ import {
     DropdownMenuTrigger,
     DropdownMenuSeparator 
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Layers2, Plus, RefreshCw, Search, Settings, Disc3, Dices, FolderOpen } from "lucide-react";
+import { ChevronDown, Layers2, Plus, RefreshCw, Search, Settings, Disc3, Dices, FolderOpen, X } from "lucide-react";
 
 import { useHydration } from '../hooks/HydrationContext';
 
@@ -38,6 +38,7 @@ interface HeaderToolbarProps {
 
 export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, onSearchChange, showDuplicatesOnly, setShowDuplicatesOnly, onSurpriseMe }: HeaderToolbarProps) {
   const [localSearch, setLocalSearch] = useState(searchQuery);
+  const inputRef = useRef<HTMLInputElement>(null);
   const { isHydrating } = useHydration();
   const uniqueCount = stats.total - stats.duplicates;
   
@@ -53,6 +54,35 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
     return () => clearTimeout(timer);
   }, [localSearch, onSearchChange, searchQuery]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Check for Ctrl+F or Cmd+F
+      if ((event.ctrlKey || event.metaKey) && event.key === 'f') {
+        event.preventDefault(); // Stop the browser's default search find
+        inputRef.current?.focus();
+      }
+      
+      // Clear search on Escape
+      if (event.key === 'Escape') {
+        onSearchChange("");
+        setLocalSearch("");
+        if (inputRef.current) {
+          inputRef.current?.blur();
+          inputRef.current.value = "";
+        }
+      }
+
+      // Type-to-search - focus if user just starts typing
+      const isInput = ['INPUT', 'TEXTAREA'].includes((event.target as HTMLElement).tagName);
+      if (!isInput && event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
+        inputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onSearchChange]);
+
   return (
     <Card className="flex flex-col md:flex-row items-center justify-between p-4 mb-6 gap-4 shadow-sm border-border">
       <ThemeToggle />
@@ -61,20 +91,32 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
       {/* Container for the floating logic */}
         <div className="relative w-full max-w-[350px] group">
           <Input
+            type="search"
             id="search-input"
             placeholder=" "
             value={localSearch}
             onChange={(e) => setLocalSearch(e.target.value)}
-            className="peer pl-9 bg-background h-11 pt-4 
-            /* Focus styles for the blue glow */
-
-            transition-shadow duration-200"
+            className="peer pl-9 bg-background h-11 pt-4 transition-shadow duration-200"
+            ref={inputRef}
           />
           
           {/* search icon */}
           <div className="absolute left-2.5 top-1/2 -translate-y-1/2">
             <Search className="h-4 w-4 text-muted-foreground" />
           </div>
+
+          {/* Custom clear "X" button */}
+          {searchQuery.length > 0 && (
+            <button
+              onClick={() => setLocalSearch("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 rounded-sm 
+                        text-muted-foreground text-white-500 hover:text-foreground hover:bg-muted 
+                        transition-all duration-200"
+              title="Clear search"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
 
           {/* The floating label */}
           <label
@@ -112,7 +154,7 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
           </Badge>
 
           {stats.duplicates > 0 && (
-            <Badge onClick={() => setShowDuplicatesOnly(!showDuplicatesOnly)} variant="destructive" className="bg-duplicate hover:bg-duplicate/80 py-1.5 px-3 shrink-0 ">
+            <Badge onClick={() => setShowDuplicatesOnly(!showDuplicatesOnly)} variant="destructive" className="bg-duplicate hover:bg-duplicate/60 py-1.5 px-3 shrink-0 ">
               {stats.duplicates}
               <Layers2 data-icon="inline-start" className="w-4 h-4 ml-1" />
             </Badge>
