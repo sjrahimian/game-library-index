@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -38,6 +38,7 @@ interface HeaderToolbarProps {
 
 export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, onSearchChange, showDuplicatesOnly, setShowDuplicatesOnly, onSurpriseMe }: HeaderToolbarProps) {
   const [localSearch, setLocalSearch] = useState(searchQuery);
+  const inputRef = useRef<HTMLInputElement>(null);
   const { isHydrating } = useHydration();
   const uniqueCount = stats.total - stats.duplicates;
   
@@ -53,6 +54,35 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
     return () => clearTimeout(timer);
   }, [localSearch, onSearchChange, searchQuery]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Check for Ctrl+F or Cmd+F
+      if ((event.ctrlKey || event.metaKey) && event.key === 'f') {
+        event.preventDefault(); // Stop the browser's default search find
+        inputRef.current?.focus();
+      }
+      
+      // Clear search on Escape
+      if (event.key === 'Escape') {
+        onSearchChange("");
+        inputRef.current?.blur();
+        if (inputRef.current) {
+          setLocalSearch("");
+          inputRef.current.value = "";
+        }
+      }
+
+      // Type-to-search - focus if user just starts typing
+      const isInput = ['INPUT', 'TEXTAREA'].includes((event.target as HTMLElement).tagName);
+      if (!isInput && event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
+        inputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onSearchChange]);
+
   return (
     <Card className="flex flex-col md:flex-row items-center justify-between p-4 mb-6 gap-4 shadow-sm border-border">
       <ThemeToggle />
@@ -61,14 +91,13 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
       {/* Container for the floating logic */}
         <div className="relative w-full max-w-[350px] group">
           <Input
+            type="search"
             id="search-input"
             placeholder=" "
             value={localSearch}
             onChange={(e) => setLocalSearch(e.target.value)}
-            className="peer pl-9 bg-background h-11 pt-4 
-            /* Focus styles for the blue glow */
-
-            transition-shadow duration-200"
+            className="peer pl-9 bg-background h-11 pt-4 transition-shadow duration-200"
+            ref={inputRef}
           />
           
           {/* search icon */}
@@ -112,7 +141,7 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
           </Badge>
 
           {stats.duplicates > 0 && (
-            <Badge onClick={() => setShowDuplicatesOnly(!showDuplicatesOnly)} variant="destructive" className="bg-duplicate hover:bg-duplicate/80 py-1.5 px-3 shrink-0 ">
+            <Badge onClick={() => setShowDuplicatesOnly(!showDuplicatesOnly)} variant="destructive" className="bg-duplicate hover:bg-duplicate/60 py-1.5 px-3 shrink-0 ">
               {stats.duplicates}
               <Layers2 data-icon="inline-start" className="w-4 h-4 ml-1" />
             </Badge>

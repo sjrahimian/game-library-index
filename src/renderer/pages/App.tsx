@@ -11,7 +11,7 @@ import { HeaderToolbar } from "../components/HeaderToolbar"; // Import the new c
 import { CurrentTheme } from "../hooks/CurrentTheme";
 import "../assets/css/App.css"
 import "../assets/css/dist.css"
-import { Gamepad2, Search } from 'lucide-react';
+import { Gamepad2, ListRestart, Search } from 'lucide-react';
 
 const UpdateToast = () => (
   <div style={{ display: 'inline-flex', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -42,7 +42,7 @@ export default function App() {
   const [stats, setStats] = useState({ steam: 0, gog: 0, total: 0, duplicates: 0 });
   const [globalFilter, setGlobalFilter] = useState("");
   const [rowData, setRowData] = useState([]);
-  const [showDuplicatesOnly, setShowDuplicatesOnly] = useState(false); // Add this
+  const [showDuplicatesOnly, setShowDuplicatesOnly] = useState(false);
   const [showGogImport, setshowGogImport] = useState(false);
   const [showSteamImport, setShowSteamImport] = useState(false);
 
@@ -65,7 +65,6 @@ export default function App() {
           <button 
             onClick={() => {
               setShowDuplicatesOnly(false);
-              // This closes the specific toast immediately
               toast.dismiss("duplicate-search-warning");
             }}
             className="ml-2 underline font-bold hover:text-amber-700 dark:hover:text-amber-200"
@@ -78,7 +77,7 @@ export default function App() {
           position: "top-center",
           autoClose: 5000,
           hideProgressBar: true,
-          icon: <Search className="w-4 h-4 text-yellow-500" />,
+          icon: <Search className="w-14 h-14 text-yellow-500" />,
       });
     } else {
       toast.dismiss("duplicate-search-warning");
@@ -183,7 +182,8 @@ export default function App() {
         type: 'success',
         progress: undefined,
         autoClose: false,
-        closeButton: true
+        closeButton: true,
+        icon: <ListRestart className="w-14 h-14 text-orange-500"/>,
       });
     });
 
