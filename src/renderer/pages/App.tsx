@@ -15,15 +15,17 @@ import { Gamepad2, ListRestart, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const UpdateToast = () => (
-  <div style={{ display: 'inline-flex', alignItems: 'center', flexWrap: 'wrap' }}>
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
     <span>Update Downloaded!</span>
-    <Button 
-      onClick={() => window.api.restartApp()}
-      className="h-auto px-2 py-1 mx-1 text-sm leading-none bg-[#2ecc71] hover:bg-[#27ae60] text-white border-none"
-    >
-      Restart Now
-    </Button>
-    <span>to apply changes.</span>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+      <Button 
+        onClick={() => window.api.restartApp()}
+        className="h-auto px-2 py-1 mx-1/2 text-sm leading-none bg-[#2ecc71] hover:bg-[#27ae60] text-white border-none"
+      >
+        Restart Now
+      </Button>
+      <span>to apply changes.</span>
+    </div>
   </div>
 );
 
@@ -68,7 +70,8 @@ export default function App() {
           autoClose: 5000,
           hideProgressBar: true,
           icon: <Search className="w-14 h-14 text-yellow-500" />,
-      });
+        }
+      );
     } else {
       toast.dismiss("duplicate-search-warning");
     }
