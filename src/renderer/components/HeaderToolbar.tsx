@@ -42,6 +42,11 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
   const { isHydrating } = useHydration();
   const uniqueCount = stats.total - stats.duplicates;
   
+  // Sync local state if the external searchQuery changes
+  useEffect(() => {
+    setLocalSearch(searchQuery);
+  }, [searchQuery]);
+
   useEffect(() => {
     // Set a timer to update the actual table 250ms after the user stops typing
     const timer = setTimeout(() => {
@@ -64,7 +69,6 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
       
       // Clear search on Escape
       if (event.key === 'Escape') {
-        onSearchChange("");
         setLocalSearch("");
         if (inputRef.current) {
           inputRef.current?.blur();
@@ -106,7 +110,7 @@ export function HeaderToolbar({ stats, onImportGOG, onImportSteam, searchQuery, 
           </div>
 
           {/* Custom clear "X" button */}
-          {searchQuery.length > 0 && (
+          {localSearch.length > 0 && (
             <button
               onClick={() => setLocalSearch("")}
               className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 rounded-sm 

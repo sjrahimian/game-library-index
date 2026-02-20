@@ -204,17 +204,28 @@ export default function App() {
       return;
     }
 
+    // Randomly select game
     const randomIndex = Math.floor(Math.random() * displayData.length);
     const selectedGame = displayData[randomIndex];
 
+    // Shorten long titles
+    const isTruncated = (selectedGame.title).length > 30;
+    const displayTitle = isTruncated ? selectedGame.title.substring(0, 30) + "..." : selectedGame.title;
+
     // Notify the user
     toast.info(
-      <span className="font-sans tracking-tight">
-        Why not play: <strong className="font-bold text-primary">{selectedGame.title}</strong>?
-      </span>,
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', textAlign: 'center' }}>
+        <span>
+          <span className='mr-2'>Why not play?</span>
+          <Button variant="outline" className="mt-2 shrink-0 border-border marginTop"
+            onClick={() => setGlobalFilter(selectedGame.title)}>
+            <strong className="font-bold text-primary">{displayTitle}</strong>
+          </Button>
+        </span>
+      </div>,
       {
         position: "top-center",
-        autoClose: 5000,
+        autoClose: 3000,
         hideProgressBar: true,
         icon: <Gamepad2 className="text-blue-500" />,
     });
